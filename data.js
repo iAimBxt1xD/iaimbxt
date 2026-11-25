@@ -50,8 +50,8 @@ window.SITE={
   "text": "#f2f0e6",
   "muted": "#8f8d82",
   "accent": "#ffd60a",
-  "g1": "#ffe98a",
-  "g2": "#ff9f1c"
+  "g1": "#a88900",
+  "g2": "#ffdd80"
  },
  "speed": 90,
  "sec": {
@@ -131,12 +131,6 @@ window.SITE={
    "Owner",
    "assaultmc.png",
    "resign"
-  ],
-  [
-   "AssaultMC",
-   "Developer",
-   "assaultmc.png",
-   "actual"
   ],
   [
    "LegendMC",
