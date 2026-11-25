@@ -189,8 +189,9 @@ async function pub(){
  }catch(e){setSt("✕ "+e.message,"err")}
  finally{busy=false;btns.forEach(b=>{b.disabled=false;b.textContent=b.dataset.t})}}
 async function waitLive(expected){
- for(let i=0;i<40;i++){await sleep(5000);
-  try{const t=await(await fetch("data.js?t="+Date.now(),{cache:"no-store"})).text();if(t.replace(/\r/g,"")===expected){setSt("✓ ¡Listo! Ya está en vivo","ok");return}}catch(e){}}
+ for(let i=0;i<40;i++){
+  try{const t=await(await fetch("data.js?t="+Date.now(),{cache:"no-store"})).text();if(t.replace(/\r/g,"")===expected){setSt("✓ ¡Listo! Ya está en vivo","ok");return}}catch(e){}
+  if(i<39)await sleep(Math.min(1000+i*250,2000))}
  setSt("Enviado, pero Vercel tarda más de lo normal. Revisa el deploy en tu panel de Vercel.","warn")}
 $("pub").onclick=pub;
 /* ---------- subir imágenes a img/ ---------- */

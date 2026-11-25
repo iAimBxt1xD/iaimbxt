@@ -52,7 +52,8 @@ const headers = async () => ({
 
 // Crea o reemplaza un archivo del repo con un commit. Devuelve {unchanged:true} si no hay cambios.
 async function putFile(path, buf, message, tries = 2) {
-  const g = await fetch(api(path) + "?ref=" + encodeURIComponent(BRANCH()), { headers: await headers() });
+  const requestHeaders = await headers();
+  const g = await fetch(api(path) + "?ref=" + encodeURIComponent(BRANCH()), { headers: requestHeaders });
   let sha, same = false;
   if (g.ok) {
     const j = await g.json();
@@ -64,7 +65,7 @@ async function putFile(path, buf, message, tries = 2) {
   if (same) return { unchanged: true };
   const r = await fetch(api(path), {
     method: "PUT",
-    headers: { ...(await headers()), "Content-Type": "application/json" },
+    headers: { ...requestHeaders, "Content-Type": "application/json" },
     body: JSON.stringify({ message, content: buf.toString("base64"), branch: BRANCH(), ...(sha ? { sha } : {}) })
   });
   if (r.status === 409 && tries > 1) return putFile(path, buf, message, tries - 1);
