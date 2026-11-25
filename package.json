@@ -1,8 +1,0 @@
-{
-  "name": "portafolio-aimbxt",
-  "private": true,
-  "version": "1.0.0",
-  "dependencies": {
-    "@vercel/connect": "^2.4.0"
-  }
-}
