@@ -420,11 +420,6 @@ const SITE={
    ""
   ],
   [
-   "img/fnafboxstreakmc.png",
-   "StreakMC ━━━━ FnafBox",
-   ""
-  ],
-  [
    "img/onebox.png",
    "CrunchMC ━━━━ OnePieceBox",
    ""
@@ -447,6 +442,11 @@ const SITE={
   [
    "img/cashmcbajobox.png",
    "CashMC ━━━━ BajoBox",
+   ""
+  ],
+  [
+   "img/fnafboxstreakmc.png",
+   "StreakMC ━━━━ FnafBox",
    ""
   ]
  ],
