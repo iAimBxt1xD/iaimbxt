@@ -58,50 +58,50 @@ window.SITE={
   "plugins": [
    "01 / plugins",
    "Plugins",
-   "Los que hice yo."
+   "Plugins Creados Para La Comunidad"
   ],
   "servers": [
    "02 / servers",
-   "Servers donde he estado",
-   "Y el rango que tuve en cada uno."
+   "Servidores Trabajados",
+   "Mi trayectoria en cada servidor trabajado"
   ],
   "skills": [
    "03 / skills",
    "Habilidades",
-   "Con qué puedo ayudarte."
+   "Mis Super Poderes"
   ],
   "reviews": [
    "04 / reseñas",
    "Reseñas",
-   "Lo que dicen los dueños con los que he trabajado."
+   "Lo que dicen de mi"
   ],
   "works": [
    "05 / trabajos",
    "Trabajos realizados",
-   "Capturas de configuraciones, lobbies y mapas."
+   "Trabajos hechos por mi"
   ],
   "contact": [
    "06 / contacto",
-   "Contacto",
-   "Escríbeme por Discord."
+   "Creamos Algo Grande?",
+   "Escribeme Al MD"
   ]
  },
  "plugins": [
   [
    "SmartStaff",
-   "Para llevar el control del staff."
+   "Moderacion dentro de tu servidor con modos de staff, congelacion, revives, sancionar, vanish y mucho mas."
   ],
   [
    "Smartcolors",
-   "Colores y formatos para el chat."
+   "Colores en el chat y formatos editables a tu manera para darle estetica a tu servidor."
   ],
   [
    "AimPvP",
-   "Plugin de PvP."
+   "Modos De PvP diferentes entre todos esos spam, trigger, cooldown, instakill y muchos mas."
   ],
   [
-   "Proximamente...",
-   ""
+   "BxtDuels",
+   "Duelos con tus amigos, tus rivales, entre mucho mas, creacion de kits a tu gusto, descripciones y menus editables."
   ]
  ],
  "servers": [
