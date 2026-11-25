@@ -1,115 +1,111 @@
-// Shared utilities for the API routes. The underscore prevents this file from becoming a public route.
+// Utilidades compartidas por las funciones de /api (el guion bajo evita que sea una ruta pública)
 const crypto = require("crypto");
 
-const SESSION_COOKIE = "__Host-admin_session";
-const SESSION_MAX_AGE = 8 * 60 * 60;
-const SITE_BLOB_PATH = "site/content.json";
 const secret = () => process.env.SESSION_SECRET || process.env.ADMIN_PASSWORD || "";
 
 function sign(payload) {
-  const body = Buffer.from(JSON.stringify(payload)).toString("base64url");
-  const signature = crypto.createHmac("sha256", secret()).update(body).digest("base64url");
-  return body + "." + signature;
+  const b = Buffer.from(JSON.stringify(payload)).toString("base64url");
+  const s = crypto.createHmac("sha256", secret()).update(b).digest("base64url");
+  return b + "." + s;
 }
 
 function verify(token) {
   if (!token || !secret()) return false;
-  const [body, signature] = String(token).split(".");
-  if (!body || !signature) return false;
-  const expected = crypto.createHmac("sha256", secret()).update(body).digest("base64url");
-  const actualBuffer = Buffer.from(signature);
-  const expectedBuffer = Buffer.from(expected);
-  if (actualBuffer.length !== expectedBuffer.length || !crypto.timingSafeEqual(actualBuffer, expectedBuffer)) return false;
-  try { return JSON.parse(Buffer.from(body, "base64url").toString()).exp > Date.now(); } catch (error) { return false; }
-}
-
-function cookieValue(req, name) {
-  for (const item of String(req.headers.cookie || "").split(";")) {
-    const separator = item.indexOf("=");
-    if (separator >= 0 && item.slice(0, separator).trim() === name) return item.slice(separator + 1).trim();
-  }
-  return "";
-}
-
-function setSessionCookie(res, token) {
-  res.setHeader("Set-Cookie", `${SESSION_COOKIE}=${token}; Max-Age=${SESSION_MAX_AGE}; Path=/; HttpOnly; Secure; SameSite=Strict`);
-}
-
-function clearSessionCookie(res) {
-  res.setHeader("Set-Cookie", `${SESSION_COOKIE}=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Strict`);
+  const [b, s] = String(token).split(".");
+  if (!b || !s) return false;
+  const good = crypto.createHmac("sha256", secret()).update(b).digest("base64url");
+  const A = Buffer.from(s), B = Buffer.from(good);
+  if (A.length !== B.length || !crypto.timingSafeEqual(A, B)) return false;
+  try { return JSON.parse(Buffer.from(b, "base64url").toString()).exp > Date.now(); } catch (e) { return false; }
 }
 
 function safeEq(a, b) {
-  const hash = value => crypto.createHash("sha256").update(String(value)).digest();
-  return crypto.timingSafeEqual(hash(a), hash(b));
+  const h = x => crypto.createHash("sha256").update(String(x)).digest();
+  return crypto.timingSafeEqual(h(a), h(b));
 }
 
 function isAuthed(req) {
-  return verify(cookieValue(req, SESSION_COOKIE));
+  return verify((req.headers.authorization || "").replace(/^Bearer\s+/i, ""));
 }
 
 function envError() {
-  const missing = ["ADMIN_PASSWORD"].filter(key => !process.env[key]);
-  return missing.length ? "Faltan variables de entorno en Vercel: " + missing.join(", ") : null;
+  const miss = ["ADMIN_PASSWORD"].filter(k => !process.env[k]);
+  return miss.length ? "Faltan variables de entorno en Vercel: " + miss.join(", ") : null;
 }
 
+const REPO = () => process.env.GITHUB_REPO || "iAimBxt1xD/iaimbxt";
+const BRANCH = () => process.env.GITHUB_BRANCH || "main";
+const api = p => `https://api.github.com/repos/${REPO()}/contents/${p.split("/").map(encodeURIComponent).join("/")}`;
+
+// Token de GitHub: usa GITHUB_TOKEN si existe; si no, pide uno temporal a Vercel Connect (GitHub App)
+async function ghToken() {
+  if (process.env.GITHUB_TOKEN) return process.env.GITHUB_TOKEN;
+  const { getToken } = await import("@vercel/connect"); // paquete ESM: import dinámico
+  return getToken(process.env.CONNECT_CONNECTOR || "github/iaimbxt", { subject: { type: "app" } });
+}
+const headers = async () => ({
+  Authorization: "Bearer " + (await ghToken()),
+  Accept: "application/vnd.github+json",
+  "User-Agent": "portafolio-admin",
+  "X-GitHub-Api-Version": "2022-11-28"
+});
+
+// Crea o reemplaza un archivo del repo con un commit. Devuelve {unchanged:true} si no hay cambios.
+async function putFile(path, buf, message, tries = 2) {
+  const requestHeaders = await headers();
+  const g = await fetch(api(path) + "?ref=" + encodeURIComponent(BRANCH()), { headers: requestHeaders });
+  let sha, same = false;
+  if (g.ok) {
+    const j = await g.json();
+    sha = j.sha;
+    if (j.content && Buffer.from(j.content.replace(/\n/g, ""), "base64").equals(buf)) same = true;
+  } else if (g.status !== 404) {
+    throw new Error("GitHub respondió " + g.status + " al leer " + path + (g.status === 401 || g.status === 403 ? " (revisa los permisos de la GitHub App o GITHUB_TOKEN)" : ""));
+  }
+  if (same) return { unchanged: true };
+  const r = await fetch(api(path), {
+    method: "PUT",
+    headers: { ...requestHeaders, "Content-Type": "application/json" },
+    body: JSON.stringify({ message, content: buf.toString("base64"), branch: BRANCH(), ...(sha ? { sha } : {}) })
+  });
+  if (r.status === 409 && tries > 1) return putFile(path, buf, message, tries - 1);
+  if (!r.ok) {
+    const t = await r.text();
+    throw new Error("GitHub respondió " + r.status + " al guardar " + path + ": " + t.slice(0, 200));
+  }
+  return { unchanged: false };
+}
+
+// Solo se aceptan peticiones que vengan de este mismo sitio
 function sameOrigin(req) {
-  const origin = req.headers.origin;
-  const host = String(req.headers.host || "").toLowerCase();
-  if (!origin || !host) return false;
-  try { return new URL(origin).host.toLowerCase() === host; } catch (error) { return false; }
+  const o = req.headers.origin;
+  if (!o) return true; // peticiones sin Origin (no navegador) igual necesitan token/contraseña
+  try { return new URL(o).host === req.headers.host; } catch (e) { return false; }
 }
 
+// Límite de intentos de login por IP (en memoria; frena fuerza bruta básica)
 const FAILS = new Map();
 const ip = req => String(req.headers["x-forwarded-for"] || "").split(",")[0].trim() || "?";
-function locked(req) { const failure = FAILS.get(ip(req)); return !!failure && failure.until > Date.now(); }
+function locked(req) { const f = FAILS.get(ip(req)); return !!f && f.until > Date.now(); }
 function fail(req) {
-  const key = ip(req), failure = FAILS.get(key) || { count: 0, until: 0 };
-  failure.count++;
-  if (failure.count >= 5) { failure.until = Date.now() + 15 * 60 * 1000; failure.count = 0; }
-  FAILS.set(key, failure);
+  const k = ip(req), f = FAILS.get(k) || { n: 0, until: 0 };
+  f.n++; if (f.n >= 5) { f.until = Date.now() + 15 * 60 * 1000; f.n = 0; }
+  FAILS.set(k, f);
   if (FAILS.size > 500) FAILS.clear();
 }
 function ok(req) { FAILS.delete(ip(req)); }
 
-function cleanData(value, depth = 0) {
+// Valida que los datos del sitio sean solo texto/números/listas razonables
+function cleanData(v, depth = 0) {
   if (depth > 6) return false;
-  if (value === null || typeof value === "number" || typeof value === "boolean") return true;
-  if (typeof value === "string") return value.length <= 5000;
-  if (Array.isArray(value)) return value.length <= 500 && value.every(item => cleanData(item, depth + 1));
-  if (typeof value === "object") {
-    const keys = Object.keys(value);
-    return keys.length <= 60 && keys.every(key => key !== "__proto__" && key !== "constructor" && key.length <= 60 && cleanData(value[key], depth + 1));
+  if (v === null || typeof v === "number" || typeof v === "boolean") return true;
+  if (typeof v === "string") return v.length <= 5000;
+  if (Array.isArray(v)) return v.length <= 500 && v.every(x => cleanData(x, depth + 1));
+  if (typeof v === "object") {
+    const k = Object.keys(v);
+    return k.length <= 60 && k.every(x => x !== "__proto__" && x !== "constructor" && x.length <= 60 && cleanData(v[x], depth + 1));
   }
   return false;
 }
 
-const SITE_ARRAYS = ["stats", "plugins", "servers", "skills", "reviews", "works", "contact"];
-function validSite(site) {
-  return !!site && typeof site === "object" && !Array.isArray(site) &&
-    site.hero && typeof site.hero === "object" && site.theme && typeof site.theme === "object" &&
-    site.sec && typeof site.sec === "object" && site.loader && typeof site.loader === "object" &&
-    site.links && typeof site.links === "object" && SITE_ARRAYS.every(key => Array.isArray(site[key])) && cleanData(site);
-}
-
-async function getStoredSite() {
-  const { get } = await import("@vercel/blob");
-  const result = await get(SITE_BLOB_PATH, { access: "private", useCache: false });
-  if (!result || result.statusCode === 404) return null;
-  if (result.statusCode !== 200) throw new Error("No se pudo leer el contenido del sitio desde Blob.");
-  return JSON.parse(await new Response(result.stream).text());
-}
-
-async function putStoredSite(site) {
-  const { put } = await import("@vercel/blob");
-  return put(SITE_BLOB_PATH, Buffer.from(JSON.stringify(site), "utf8"), {
-    access: "private",
-    allowOverwrite: true,
-    contentType: "application/json; charset=utf-8"
-  });
-}
-
-module.exports = {
-  sign, safeEq, isAuthed, envError, sameOrigin, locked, fail, ok, cleanData, validSite,
-  setSessionCookie, clearSessionCookie, getStoredSite, putStoredSite
-};
+module.exports = { sign, safeEq, isAuthed, envError, putFile, sameOrigin, locked, fail, ok, cleanData };
