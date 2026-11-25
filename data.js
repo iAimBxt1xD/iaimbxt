@@ -148,7 +148,7 @@ window.SITE={
    "MineDown",
    "Developer",
    "minedown.png",
-   "actual"
+   "resign"
   ],
   [
    "MinePan",
@@ -214,7 +214,7 @@ window.SITE={
    "MineDark",
    "Developer",
    "minedark.png",
-   "actual"
+   "resign"
   ],
   [
    "MineDoll",
@@ -275,6 +275,12 @@ window.SITE={
    "Developer",
    "firemc.png",
    "resign"
+  ],
+  [
+   "SneakMC",
+   "Jr - Mod",
+   "sneakmc.png",
+   "actual"
   ]
  ],
  "skills": [
