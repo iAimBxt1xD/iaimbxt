@@ -43,7 +43,9 @@ h2{font:700 22px Sora;margin-bottom:4px}h3{font:700 15px Sora;margin:22px 0 10px
 .cl{display:flex;gap:8px}.im2{display:flex;gap:8px;align-items:center}.im2 img{width:40px;height:40px;object-fit:contain;border-radius:8px;background:#0c0c0b;border:1px solid var(--line);flex:none}
 .gp{height:46px;border-radius:12px;margin:14px 0;border:2px solid var(--line)}
 .pre{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
-.pre button{display:flex;gap:8px;align-items:center}.pre i{display:inline-block;width:36px;height:12px;border-radius:6px}
+  .pre button{display:flex;gap:8px;align-items:center}.pre i{display:inline-block;width:36px;height:12px;border-radius:6px}
+  .section-title-preview{font:700 clamp(20px,3vw,28px) Sora, sans-serif;letter-spacing:-.04em;line-height:1.2;margin:12px 0 18px;overflow-wrap:anywhere;background-clip:text;-webkit-background-clip:text;color:transparent}
+
 .tip{background:rgba(255,214,10,.08);border:1px solid rgba(255,214,10,.3);border-radius:12px;padding:12px 14px;font-size:13.5px;color:#d4d2c6;margin-bottom:18px}
 textarea.out{height:260px;font:12px 'JetBrains Mono';color:var(--y)}
 ol{margin:10px 0 18px 20px;line-height:1.9;font-size:14.5px}
@@ -120,7 +122,7 @@ const LST=(path,cols)=>getp(D,path).map((r,i)=>`<div class="row">${grid(cols.map
 const TITLE=(t,s)=>`<h2>${t}</h2><p class="sub">${s}</p>`;
 const SECTION_GRADIENT_DEFAULTS={plugins:{start:"#f2f0e6",end:"#ff9f1c"},servers:{start:"#f2f0e6",end:"#d6f36a"},skills:{start:"#f2f0e6",end:"#ff9f1c"},reviews:{start:"#f2f0e6",end:"#ff9f1c"},works:{start:"#f2f0e6",end:"#ff9f1c"},contact:{start:"#f2f0e6",end:"#ff9f1c"}};
 const sectionColor=(value,fallback)=>/^#[0-9a-f]{6}$/i.test(String(value||""))?value:fallback;
-const SEC=k=>{const defaults=SECTION_GRADIENT_DEFAULTS[k],start=sectionColor(getp(D,`sectionGradients.${k}.start`),defaults.start),end=sectionColor(getp(D,`sectionGradients.${k}.end`),defaults.end);return grid(F("Etiqueta pequeña",`sec.${k}.0`)+F("Título",`sec.${k}.1`)+F("Descripción",`sec.${k}.2`))+`<p class="help">Personaliza el degradado del título de esta sección. Para «Servidores trabajados», el ejemplo usa blanco cálido y verde lima.</p>`+grid(F("Degradado: inicio",`sectionGradients.${k}.start`,{k:"color",defaultValue:defaults.start})+F("Degradado: final",`sectionGradients.${k}.end`,{k:"color",defaultValue:defaults.end}))+`<div class="gp" data-gradient-preview="${k}" aria-label="Vista previa del degradado del título" style="background:linear-gradient(90deg,${start},${end})"></div>`};
+const SEC=k=>{const defaults=SECTION_GRADIENT_DEFAULTS[k],start=sectionColor(getp(D,`sectionGradients.${k}.start`),defaults.start),end=sectionColor(getp(D,`sectionGradients.${k}.end`),defaults.end),title=getp(D,`sec.${k}.1`)||"Título de la sección";return grid(F("Etiqueta pequeña",`sec.${k}.0`)+F("Texto del título",`sec.${k}.1`)+F("Descripción",`sec.${k}.2`))+`<p class="help">Edita el texto igual que los demás campos y personaliza sus colores. La vista previa muestra el resultado.</p>`+grid(F("Degradado: inicio",`sectionGradients.${k}.start`,{k:"color",defaultValue:defaults.start})+F("Degradado: final",`sectionGradients.${k}.end`,{k:"color",defaultValue:defaults.end}))+`<div class="gp" data-gradient-preview="${k}" aria-label="Muestra del degradado del título" style="background:linear-gradient(90deg,${start},${end})"></div><div class="section-title-preview" data-section-title-preview="${k}" aria-label="Vista previa del título con su degradado" style="background-image:linear-gradient(100deg,${start},${end})">${esc(title)}</div>`};
 function pageRows(){
  D.pages=Array.isArray(D.pages)?D.pages:[];
  return TITLE("Páginas de proyecto","Crea páginas individuales con URL propia, portada, galería y metadatos. Los cambios publicados aparecen sin esperar un nuevo deploy.")+`<div class="tip">Las imágenes se optimizan y guardan automáticamente. Sube archivos, arrástralos o copia una imagen y pulsa «Pegar imagen» antes de usar Ctrl+V.</div>`+D.pages.map((p,i)=>{
@@ -176,7 +178,8 @@ $("pv").onload=post;
  const gradientMatch=p.match(/^sectionGradients\.([a-z]+)\.(start|end)$/);
  if(gradientMatch){const key=gradientMatch[1];if(!D.sectionGradients||typeof D.sectionGradients!=="object")D.sectionGradients={};if(!D.sectionGradients[key]||typeof D.sectionGradients[key]!=="object")D.sectionGradients[key]={}}
  setp(D,p,v);
- if(gradientMatch){const key=gradientMatch[1],defaults=SECTION_GRADIENT_DEFAULTS[key],start=sectionColor(getp(D,`sectionGradients.${key}.start`),defaults.start),end=sectionColor(getp(D,`sectionGradients.${key}.end`),defaults.end),preview=document.querySelector(`[data-gradient-preview="${key}"]`);if(preview)preview.style.background=`linear-gradient(90deg,${start},${end})`}
+ if(gradientMatch){const key=gradientMatch[1],defaults=SECTION_GRADIENT_DEFAULTS[key],start=sectionColor(getp(D,`sectionGradients.${key}.start`),defaults.start),end=sectionColor(getp(D,`sectionGradients.${key}.end`),defaults.end),preview=document.querySelector(`[data-gradient-preview="${key}"]`),titlePreview=document.querySelector(`[data-section-title-preview="${key}"]`);if(preview)preview.style.background=`linear-gradient(90deg,${start},${end})`;if(titlePreview)titlePreview.style.backgroundImage=`linear-gradient(100deg,${start},${end})`}
+ const sectionTitleMatch=p.match(/^sec\.([a-z]+)\.1$/);if(sectionTitleMatch){const titlePreview=document.querySelector(`[data-section-title-preview="${sectionTitleMatch[1]}"]`);if(titlePreview)titlePreview.textContent=v||"Título de la sección"}
  const titleMatch=p.match(/^pages\.(\d+)\.title$/);
  if(titleMatch){const n=+titleMatch[1],slugInput=document.querySelector(`[data-p="pages.${n}.slug"]`);if(slugInput&&(!slugInput.value||slugInput.dataset.autogenerated==="true")){const slug=uniquePageSlug(v,n);slugInput.value=slug;slugInput.dataset.autogenerated="true";setp(D,`pages.${n}.slug`,slug)}}
  if(/^pages\.\d+\.slug$/.test(p))t.dataset.autogenerated="false";
