@@ -94,22 +94,22 @@ window.SITE={
   ],
   [
    "Smartcolors",
-   "Colores en el chat y formatos editables a tu manera para darle estetica a tu servidor.",
+   "Imagina colores en el chat y formatos editables a tu manera para darle estetica a tu servidor.",
    "plugins/SmartColors.jar"
   ],
   [
    "BxtDuels (De Paga)",
-   "Duelos con tus amigos, tus rivales, entre mucho mas, creacion de kits a tu gusto, descripciones y menus editables. Requiere de una licencia de paga.",
+   "Haz duelos con tus amigos, tus rivales, entre mucho mas, creacion de kits a tu gusto, descripciones y menus editables. Requiere de una licencia de paga.",
    "plugins/BxtDuels.jar"
   ],
   [
    "TotemLock",
-   "Un plugin para evitar el ghost del totem molestoso dentro de tu servidor mejorando la experiencia de cada jugador.",
+   "Plugin para evitar el ghost del totem molestoso dentro de tu servidor mejorando la experiencia de cada jugador.",
    "plugins/TotemLock.jar"
   ],
   [
    "SmartEffects",
-   "Plugin conectandose con WorldGuard el cual permitira poner efectos en la region que eligas ningun inconveniente y con niveles de cada efecto.",
+   "Un plugin conectandose con WorldGuard el cual permitira poner efectos en la region que eligas ningun inconveniente y con niveles de cada efecto.",
    "plugins/SmartEffects-1.0.0.jar"
   ]
  ],
