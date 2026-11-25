@@ -233,19 +233,22 @@ h2:after{background:linear-gradient(90deg,var(--y),var(--g2))!important;-webkit-
 <div id="rm" class="modal"><div class="mbox"><button class="x" data-close>×</button><h3 id="rmA"></h3><small id="rmR"></small><p id="rmQ"></p></div></div>
 <div id="wm" class="modal"><div class="mbox wbox"><button class="x" data-close>×</button><h3>Todos mis trabajos</h3><div class="works" id="wAll"></div></div></div>
 <div id="lb" class="modal"><button class="x" data-close>×</button><button class="ar l" id="lbP" aria-label="Anterior">‹</button><img id="lbI" alt=""><div class="info"><span id="lbC"></span><span id="lbN"></span></div><p id="lbD" class="lbd"></p><button class="ar rr" id="lbX" aria-label="Siguiente">›</button></div>
-<script src="data.js"></script>
+<script src="/api/site"></script>
 <script>
 const PREVIEW=/[?&]preview/.test(location.search)&&window.parent!==window;
 let SITE=window.SITE,statsDone=PREVIEW,BL={};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const S=p=>BL[p]||p;
-const fig=(w,i,rv)=>`<figure class="${rv?"rv":""}" data-i="${i}"><img src="${esc(S(w[0]))}" alt="${esc(w[1])}" loading="lazy"><figcaption>${esc(w[1])}</figcaption></figure>`;
+const BLOB_ASSET=/^\/api\/asset\?path=media\/[a-f0-9]{64}-[A-Za-z0-9_-][A-Za-z0-9._-]{0,80}\.(?:png|jpe?g|webp|gif)$/i;
+const imagePath=value=>{const path=String(value||"");if(BLOB_ASSET.test(path))return path;if(/^(?:img|trabajos)\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-][A-Za-z0-9._-]{0,80}\.(?:png|jpe?g|webp|gif)$/i.test(path)&&!path.split("/").includes(".."))return "/"+path;return ""};
+const fig=(w,i,rv)=>`<figure class="${rv?"rv":""}" data-i="${i}"><img src="${esc(S(imagePath(w[0])))}" alt="${esc(w[1])}" loading="lazy" decoding="async"><figcaption>${esc(w[1])}</figcaption></figure>`;
 const url=u=>/^(https?:|mailto:|#)/.test(u)?esc(u):"#";
 const own=r=>r==="Dueño"||r==="Owner";
-const img=(f,n)=>`<span class="im"><img src="img/${esc(f)}" alt="" data-n="${esc(n)}" onerror="this.parentNode.textContent=this.dataset.n.charAt(0)"></span>`;
+const img=(f,n)=>`<span class="im"><img src="${esc(imagePath(f))}" alt="" data-n="${esc(n)}" loading="lazy" decoding="async"></span>`;
 const head=k=>{const h=SITE.sec[k];return `<p class="eyebrow rv">${esc(h[0])}</p><h2 class="rv">${esc(h[1])}</h2>${h[2]?`<p class="hint">${esc(h[2])}</p>`:""}`};
 const card=s=>{const a=s[3]==="actual";return `<div class="sv ${a?"act":""}"><span class="bd ${a?"on":"off"}">${a?"ACTUAL":"RESIGN"}</span>${img(s[2],s[0])}<h4>${esc(s[0])}</h4><span class="rk ${own(s[1])?"own":""}">${esc(s[1])}</span></div>`};
+addEventListener("error",event=>{const image=event.target;if(image instanceof HTMLImageElement&&image.dataset.n&&image.parentNode)image.parentNode.textContent=image.dataset.n.charAt(0)},true);
 const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target)}}),{threshold:.1});
 function render(){
  const D=SITE,T=D.theme||{},rs=document.documentElement.style,M={bg:"--bg",card:"--card",line:"--line",text:"--t",muted:"--m",accent:"--y",g1:"--g1",g2:"--g2"};
@@ -259,7 +262,7 @@ function render(){
  $("stats").innerHTML=D.stats.map(s=>`<div><b data-n="${+s[0]||0}" data-s="${esc(s[1])}">${statsDone?(+s[0]||0)+esc(s[1]):0}</b><span>${esc(s[2])}</span></div>`).join("");
  if(PREVIEW)$("stats").classList.add("go");
  for(const k of ["plugins","servers","skills","reviews","works","contact"])$("h_"+k).innerHTML=head(k);
- $("plg").innerHTML=D.plugins.map(p=>{const j=/^plugins\/[A-Za-z0-9_-][A-Za-z0-9._-]*\.jar$/.test(p[2]||"")?p[2]:"",t=`<h3>${esc(p[0])}</h3><p>${esc(p[1])}</p>${j?'<span class="dlb">⬇ Clic para descargar</span>':""}`;return j?`<a class="c plug dl rv" href="${esc(j)}" download>${t}</a>`:`<div class="c plug rv">${t}</div>`}).join("");
+ $("plg").innerHTML=D.plugins.map(p=>{const path=String(p[2]||""),j=/^plugins\/[A-Za-z0-9_-][A-Za-z0-9._-]*\.jar$/.test(path)||/^\/api\/asset\?path=media\/[a-f0-9]{64}-[A-Za-z0-9._-]{1,80}\.jar$/i.test(path)?path:"",t=`<h3>${esc(p[0])}</h3><p>${esc(p[1])}</p>${j?'<span class="dlb">⬇ Clic para descargar</span>':""}`;return j?`<a class="c plug dl rv" href="${esc(j)}" download>${t}</a>`:`<div class="c plug rv">${t}</div>`}).join("");
  const sv=D.servers.map(card).join("");$("srv").innerHTML=sv+sv;$("srv").style.animationDuration=(+D.speed||90)+"s";
  $("skl").innerHTML=D.skills.map(s=>`<div class="c rv"><h3>${esc(s[0])}</h3><p>${esc(s[1])}</p><div class="tags">${String(s[2]).split(",").map(x=>x.trim()).filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join("")}</div></div>`).join("");
  $("rev").innerHTML=D.reviews.map((r,i)=>`<div class="r rv" style="transition-delay:${(i%3)*.12}s"><p class="cl">“${esc(r[4])}”</p>${r[4].length>140?`<button class="more" data-i="${i}">Ver más</button>`:""}<div class="who">${img(r[3],r[1])}<div><b>${esc(r[1])}</b><span>${esc(r[2])} · ${esc(r[0])}</span></div></div></div>`).join("");
@@ -290,19 +293,20 @@ $("ctc").onclick=e=>{const b=e.target.closest("[data-copy]");if(!b)return;try{na
 function runStats(){const st=$("stats");st.classList.add("go");
  st.querySelectorAll("[data-n]").forEach((el,k)=>{const t=+el.dataset.n,s=el.dataset.s||"",d=1600,t0=performance.now()+k*150;
  (function f(now){const p=Math.min(Math.max((now-t0)/d,0),1),v=1-Math.pow(1-p,3);el.textContent=Math.round(t*v)+s;if(p<1)requestAnimationFrame(f);else{el.classList.add("done");statsDone=true}})(performance.now())})}
-if(!PREVIEW)setTimeout(()=>new IntersectionObserver((e,o)=>{if(!e[0].isIntersecting)return;o.disconnect();runStats()},{threshold:.4}).observe($("stats")),(+SITE.loader.ms||2600)+100);
+const loaderDelay=Math.min(Math.max(Number(SITE.loader.ms)||450,0),600);
+if(!PREVIEW)setTimeout(()=>new IntersectionObserver((e,o)=>{if(!e[0].isIntersecting)return;o.disconnect();runStats()},{threshold:.4}).observe($("stats")),loaderDelay+100);
 /* barra, menú, loader */
 const bar=$("bar");addEventListener("scroll",()=>{const e=document.documentElement;bar.style.width=(e.scrollTop/(e.scrollHeight-e.clientHeight)*100)+"%"},{passive:true});
 const L=$("links");$("tg").onclick=()=>L.classList.toggle("open");L.onclick=()=>L.classList.remove("open");
 const endLoad=()=>{$("loader").classList.add("off");document.body.classList.remove("lock");scrollTo(0,0)};
-if(PREVIEW)endLoad();else{document.querySelector(".lbar i").style.animationDuration=((+SITE.loader.ms||2600)-200)/1000+"s";setTimeout(endLoad,+SITE.loader.ms||2600)}
+if(PREVIEW)endLoad();else{document.querySelector(".lbar i").style.animationDuration=Math.max(loaderDelay-200,0)/1000+"s";setTimeout(endLoad,loaderDelay)}
 /* texto que se escribe solo */
 {const te=$("typed");let a=0,b=0,del=false;(function t(){const ph=SITE.hero.typed&&SITE.hero.typed.length?SITE.hero.typed:[""];a%=ph.length;const w=ph[a];let n;
 if(!del){b=Math.min(b+1,w.length);te.textContent=w.slice(0,b);n=70;if(b>=w.length){del=true;n=1600}}
 else{b=Math.min(b,w.length)-1;te.textContent=w.slice(0,Math.max(b,0));n=30;if(b<=0){b=0;del=false;a=(a+1)%ph.length;n=400}}
 setTimeout(t,n)})()}
 /* vista previa en vivo desde el panel admin */
-if(PREVIEW){addEventListener("message",e=>{if(e.data&&e.data.t==="iaimbxt-site"){SITE=e.data.site;render()}if(e.data&&e.data.t==="iaimbxt-bl"){BL=e.data.bl||{};render()}});parent.postMessage({t:"iaimbxt-ready"},"*")}
+if(PREVIEW){addEventListener("message",e=>{if(e.origin!==location.origin||e.source!==parent)return;if(e.data&&e.data.t==="iaimbxt-site"){SITE=e.data.site;render()}if(e.data&&e.data.t==="iaimbxt-bl"){BL=e.data.bl||{};render()}});parent.postMessage({t:"iaimbxt-ready"},location.origin)}
 </script>
 </body>
 </html>

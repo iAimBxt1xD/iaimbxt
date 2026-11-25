@@ -49,7 +49,7 @@ textarea.out{height:260px;font:12px 'JetBrains Mono';color:var(--y)}
 ol{margin:10px 0 18px 20px;line-height:1.9;font-size:14.5px}
 @media(max-width:900px){.lay{grid-template-columns:1fr;height:auto}.pvw{height:70vh;border-left:0;border-top:2px solid var(--line)}}
 </style></head><body>
-<div id="login"><div class="box"><img src="img/logo.png" alt="" onerror="this.style.display='none'">
+<div id="login"><div class="box"><img src="img/logo.png" alt="" data-login-logo>
 <h1>Admin Panel</h1><p>Acceso restringido. Ingresa la contraseña.</p>
 <input type="password" id="pw" placeholder="Contraseña" autocomplete="current-password">
 <button class="btn p" id="go" style="width:100%;margin-top:14px">Entrar</button><div id="msg"></div>
@@ -61,33 +61,36 @@ ol{margin:10px 0 18px 20px;line-height:1.9;font-size:14.5px}
 <div class="lay" id="lay"><div class="ed"><div class="tabs" id="tabs"></div><div id="panel"></div></div>
 <div class="pvw"><small>VISTA PREVIA EN VIVO — lo que cambies se ve aquí al instante</small><input type="file" id="fi" class="hide" accept="image/png,image/jpeg,image/webp,image/gif"><input type="file" id="fw" class="hide" multiple accept="image/png,image/jpeg,image/webp,image/gif"><input type="file" id="fj" class="hide" accept=".jar"><iframe id="pv" src="index.html?preview=1" title="Vista previa"></iframe></div></div></div>
 
-<script src="data.js"></script>
+<script src="/api/site"></script>
 <script>
-if(!window.SITE)document.body.innerHTML='<p style="padding:40px;font-family:sans-serif;color:#fff">No se encontró data.js. Ponlo en la misma carpeta que admin.html.</p>';
+if(!window.SITE)document.body.innerHTML='<p style="padding:40px;font-family:sans-serif;color:#fff">No se pudo cargar el contenido del sitio.</p>';
+try{sessionStorage.removeItem("iaimbxt_tk")}catch(e){}
 const $=id=>document.getElementById(id),clone=o=>JSON.parse(JSON.stringify(o));
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const ORIG=clone(window.SITE||{});
 const fill=(d,o)=>{for(const k in o){if(d[k]==null)d[k]=clone(o[k]);else if(o[k]&&typeof o[k]==="object"&&!Array.isArray(o[k]))fill(d[k],o[k])}return d};
 let D;try{D=JSON.parse(localStorage.iaimbxt_site)}catch(e){}
 D=fill(D&&D.hero?D:clone(ORIG),ORIG);
-let PUB=JSON.stringify(ORIG);try{if(localStorage.iaimbxt_pub)PUB=localStorage.iaimbxt_pub}catch(e){}
+let PUB=JSON.stringify(ORIG);
 const getp=(o,p)=>p.split(".").reduce((a,k)=>a==null?a:a[k],o);
 const setp=(o,p,v)=>{const k=p.split("."),l=k.pop();k.reduce((a,x)=>a[x],o)[l]=v};
 const BL={};
+const BLOB_ASSET=/^\/api\/asset\?path=media\/[a-f0-9]{64}-[A-Za-z0-9_-][A-Za-z0-9._-]{0,80}\.(?:png|jpe?g|webp|gif|jar)$/i;
+const imageSource=(value,prefix="")=>BLOB_ASSET.test(String(value||""))?String(value):prefix+String(value||"");
+addEventListener("error",event=>{const image=event.target;if(!(image instanceof HTMLImageElement))return;if(image.dataset.th)image.style.opacity=.2;if(image.dataset.loginLogo)image.hidden=true},true);
 const BLANK={plugins:["","",""],servers:["","Developer","","resign"],skills:["","",""],reviews:["","","Dueño","",""],works:["trabajos/","",""],contact:["","","","Abrir",""],stats:[0,"",""]};
 const PRESETS=[["Amarillo","#ffd60a","#ffe98a","#ff9f1c"],["Morado","#a78bfa","#e9d5ff","#ec4899"],["Verde","#3ddc84","#bbf7d0","#06b6d4"],["Azul","#38bdf8","#e0f2fe","#6366f1"],["Rosa","#ff5fa2","#ffd1e6","#ff9f1c"],["Rojo","#ff4d4d","#ffd0d0","#ff9f1c"]];
 /* ---------- login (se valida en el servidor) ---------- */
-const TK=()=>sessionStorage.iaimbxt_tk;
 function enter(){$("login").classList.add("hide");$("app").classList.remove("hide");try{localStorage.iaimbxt_admin="1"}catch(e){}draw();dirtySt()}
-function logout(){sessionStorage.removeItem("iaimbxt_tk");location.reload()}
+function logout(){fetch("/api/logout",{method:"POST",credentials:"same-origin"}).catch(()=>{}).finally(()=>location.reload())}
 async function login(){
  if(Date.now()<(+sessionStorage.lk||0)){$("msg").textContent="Demasiados intentos. Espera un momento.";return}
  let r,j={};
- try{r=await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password:$("pw").value})});j=await r.json()}
- catch(e){$("msg").textContent="No se pudo conectar. Abre el admin desde tu dominio de Vercel (en local no existe /api).";return}
- if(r.ok&&j.token){sessionStorage.fails=0;sessionStorage.iaimbxt_tk=j.token;enter()}
+ try{r=await fetch("/api/login",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({password:$("pw").value})});j=await r.json()}
+ catch(e){$("msg").textContent="No se pudo conectar con el servidor de autenticación.";return}
+ if(r.ok&&j.ok){sessionStorage.fails=0;enter()}
  else{$("msg").textContent=j.error||"Error al entrar.";if(r.status===401){const f=(+sessionStorage.fails||0)+1;sessionStorage.fails=f;if(f>=5){sessionStorage.lk=Date.now()+60000;sessionStorage.fails=0}}$("pw").value=""}}
-$("go").onclick=login;$("pw").onkeydown=e=>{if(e.key==="Enter")login()};
+$("go").onclick=login;$("pw").onkeydown=e=>{if(e.key==="Enter"&&!e.isComposing&&e.keyCode!==229)login()};
 $("out").onclick=logout;
 /* ---------- constructores de formulario ---------- */
 const F=(label,p,o={})=>{const v=getp(D,p),a=`data-p="${p}"`;let i;
@@ -97,7 +100,7 @@ const F=(label,p,o={})=>{const v=getp(D,p),a=`data-p="${p}"`;let i;
  else if(o.k==="color")i=`<div class="cl"><input type="color" ${a} data-k="color" value="${esc(v)}"><input ${a} data-k="color" value="${esc(v)}"></div>`;
  else if(o.k==="sel")i=`<select ${a}>${o.o.map(([x,y])=>`<option value="${x}" ${x===v?"selected":""}>${y}</option>`).join("")}</select>`;
  else if(o.k==="jar")i=`<div class="im2"><input ${a} data-k="jar" placeholder="plugins/MiPlugin.jar" value="${esc(v)}"><button type="button" class="btn s up" data-a="upjar" data-p="${p}" style="white-space:nowrap">⬆ Subir .jar</button></div>`;
- else if(o.k==="img")i=`<div class="im2"><img data-th="${p}" src="${esc(BL[v]||(o.pre||"")+v)}" alt="" onerror="this.style.opacity=.2"><input ${a} data-k="img" data-pre="${o.pre||""}" value="${esc(v)}"><button type="button" class="btn s up" data-a="upimg" data-p="${p}" title="Subir imagen">⬆</button></div>`;
+ else if(o.k==="img")i=`<div class="im2"><img data-th="${p}" src="${esc(BL[v]||imageSource(v,o.pre||""))}" alt=""><input ${a} data-k="img" data-pre="${o.pre||""}" value="${esc(v)}"><button type="button" class="btn s up" data-a="upimg" data-p="${p}" title="Subir imagen">⬆</button></div>`;
  else i=`<input ${a} value="${esc(v)}">`;
  return `<div class="${o.w?"w":""}"><label>${label}</label>${i}</div>`};
 const grid=x=>`<div class="f">${x}</div>`;
@@ -127,7 +130,7 @@ reviews:["Reseñas",()=>TITLE("Reseñas","Lo que dicen los dueños.")+LST("revie
 works:["Trabajos",()=>TITLE("Trabajos","Sube todas las capturas que quieras y luego solo escribe nombre y descripción.")+`<div class="drop" id="drop"><b>Arrastra tus imágenes aquí</b><br><br><button class="btn p" data-a="pickworks">Elegir imágenes</button><small>Puedes elegir muchas a la vez; se optimizan solas. En el portafolio salen las 3 primeras y el resto en «Ver más». Al terminar pulsa 🚀 Actualizar página.</small></div>`+LST("works",[["Imagen (ruta)",0,{k:"img"}],["Nombre",1],["Descripción (se ve al abrir la foto)",2,{w:1}]])],
 contact:["Contacto",()=>TITLE("Contacto","Si dejas el link vacío, el botón copia el texto de arriba (ej. tu usuario de Discord).")+LST("contact",[["Título",0],["Subtítulo",1],["Texto / usuario",2],["Texto del botón",3],["Link (vacío = copiar)",4,{w:1}]])],
 pub:["Publicar",()=>TITLE("Publicar cambios","Pulsa el botón y tu portafolio real se actualiza solo.")+
- `<div class="tip">Al pulsar <b>🚀 Actualizar página</b> tus cambios se guardan en GitHub y Vercel vuelve a publicar el sitio (tarda ~30–60 s). Arriba te avisa cuando ya esté en vivo.</div>
+ `<div class="tip">Al pulsar <b>Actualizar página</b>, los cambios se guardan en Blob y quedan disponibles al instante, sin esperar un despliegue.</div>
  <div class="bar"><button class="btn p" data-a="publish">🚀 Actualizar página</button><button class="btn s d" data-a="reset">Descartar cambios y volver al original</button></div>
  <details style="margin-top:18px"><summary style="cursor:pointer;color:var(--m);font-size:13px">Método manual (copia de seguridad)</summary><textarea class="out" readonly>${esc(dataJs())}</textarea><div class="bar"><button class="btn s" data-a="dl">⬇ Descargar data.js</button><button class="btn s" data-a="cp">Copiar data.js</button></div></details>`]};
 let tab="general";
@@ -139,16 +142,16 @@ let busy=false;
 function dirtySt(){if(busy)return;JSON.stringify(D)===PUB?setSt("✓ al día con la página","ok"):setSt("● cambios sin publicar","warn")}
 let tm;function changed(){try{localStorage.iaimbxt_site=JSON.stringify(D)}catch(e){}dirtySt();clearTimeout(tm);tm=setTimeout(post,120);
  const g=$("gp");if(g)g.style.background=`linear-gradient(90deg,${D.theme.g1},${D.theme.accent},${D.theme.g2})`}
-const postBL=()=>{try{$("pv").contentWindow.postMessage({t:"iaimbxt-bl",bl:BL},"*")}catch(e){}};
-const post=()=>{try{$("pv").contentWindow.postMessage({t:"iaimbxt-site",site:D},"*")}catch(e){}};
-addEventListener("message",e=>{if(e.data&&e.data.t==="iaimbxt-ready"){post();postBL()}});
+const postBL=()=>{try{$("pv").contentWindow.postMessage({t:"iaimbxt-bl",bl:BL},location.origin)}catch(e){}};
+const post=()=>{try{$("pv").contentWindow.postMessage({t:"iaimbxt-site",site:D},location.origin)}catch(e){}};
+addEventListener("message",e=>{if(e.origin!==location.origin||e.source!==$("pv").contentWindow)return;if(e.data&&e.data.t==="iaimbxt-ready"){post();postBL()}});
 $("pv").onload=post;
 $("panel").addEventListener("input",e=>{const t=e.target,p=t.dataset.p;if(!p)return;let v=t.value;
  if(t.dataset.k==="num")v=Number(v)||0;
  if(t.dataset.k==="lines")v=v.split("\n").map(x=>x.trim()).filter(Boolean);
  setp(D,p,v);
  if(t.dataset.k==="color"&&/^#[0-9a-f]{6}$/i.test(v))document.querySelectorAll(`[data-p="${p}"]`).forEach(x=>{if(x!==t)x.value=v});
- if(t.dataset.k==="img")document.querySelectorAll(`[data-th="${p}"]`).forEach(x=>{x.style.opacity=1;x.src=t.dataset.pre+v});
+ if(t.dataset.k==="img")document.querySelectorAll(`[data-th="${p}"]`).forEach(x=>{x.style.opacity=1;x.src=imageSource(v,t.dataset.pre)});
  changed()});
 $("tabs").onclick=e=>{const k=e.target.dataset.t;if(k){tab=k;draw()}};
 $("panel").onclick=e=>{const a=e.target.dataset.a;if(!a)return;if(a==="publish"){pub();return}
@@ -167,32 +170,27 @@ $("panel").onclick=e=>{const a=e.target.dataset.a;if(!a)return;if(a==="publish")
  changed();draw()};
 $("tpv").onclick=function(){this.classList.toggle("on");$("lay").classList.toggle("nopv")};
 function download(){const u=URL.createObjectURL(new Blob([dataJs()],{type:"text/javascript"})),a=document.createElement("a");a.href=u;a.download="data.js";a.click();setTimeout(()=>URL.revokeObjectURL(u),500)}
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-const authHdr=()=>({"Content-Type":"application/json",Authorization:"Bearer "+TK()});
 async function call(url,body){
- const r=await fetch(url,{method:"POST",headers:authHdr(),body:JSON.stringify(body)});
+ const r=await fetch(url,{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
  const j=await r.json().catch(()=>({}));
  if(r.status===401){alert(j.error||"Sesión vencida.");logout();throw new Error("Sesión vencida")}
  if(!r.ok)throw new Error(j.error||"Error "+r.status);
  return j}
 /* ---------- botón ACTUALIZAR PÁGINA ---------- */
 async function pub(){
- if(busy)return;busy=true;
- const btns=[$("pub"),...document.querySelectorAll('[data-a="publish"]')],expected=dataJs(),snap=JSON.stringify(D);
+ if(busy)return;
+ const snap=JSON.stringify(D);
+ if(snap===PUB){setSt("✓ La página ya está actualizada","ok");return}
+ busy=true;
+ const btns=[$("pub"),...document.querySelectorAll('[data-a="publish"]')];
  btns.forEach(b=>{b.disabled=true;b.dataset.t=b.textContent;b.textContent="Publicando…"});
- setSt("⏳ Enviando cambios…","warn");
+ setSt("⏳ Guardando cambios…","warn");
  try{
-  const j=await call("/api/publish",{site:clone(D)});
-  PUB=snap;try{localStorage.iaimbxt_pub=PUB}catch(e){}
-  if(j.unchanged){setSt("✓ La página ya estaba así de actualizada","ok")}
-  else{setSt("⏳ Enviado. Esperando que Vercel publique…","warn");await waitLive(expected)}
+  await call("/api/publish",{site:clone(D)});
+  PUB=snap;
+  setSt("✓ Cambios publicados al instante","ok");
  }catch(e){setSt("✕ "+e.message,"err")}
  finally{busy=false;btns.forEach(b=>{b.disabled=false;b.textContent=b.dataset.t})}}
-async function waitLive(expected){
- for(let i=0;i<40;i++){
-  try{const t=await(await fetch("data.js?t="+Date.now(),{cache:"no-store"})).text();if(t.replace(/\r/g,"")===expected){setSt("✓ ¡Listo! Ya está en vivo","ok");return}}catch(e){}
-  if(i<39)await sleep(Math.min(1000+i*250,2000))}
- setSt("Enviado, pero Vercel tarda más de lo normal. Revisa el deploy en tu panel de Vercel.","warn")}
 $("pub").onclick=pub;
 /* ---------- subir imágenes a img/ ---------- */
 let UPP=null;
@@ -214,11 +212,11 @@ $("fi").onchange=async function(){
  const f=this.files[0],p=UPP;if(!f||!p)return;
  setSt("⏳ Subiendo imagen…","warn");busy=true;
  try{
-  const{name,blob}=await prep(f),url=await toB64(blob);
-  await call("/api/upload",{name,data:url.split(",")[1]});
-  const inp=document.querySelector(`input[data-k="img"][data-p="${p}"]`),pre=inp.dataset.pre;
-  inp.value=pre?name:"img/"+name;inp.dispatchEvent(new Event("input",{bubbles:true}));
-  document.querySelectorAll(`[data-th="${p}"]`).forEach(x=>{x.style.opacity=1;x.src=url});
+  const{name,blob}=await prep(f),previewUrl=await toB64(blob);
+  const saved=await call("/api/upload",{name,data:previewUrl.split(",")[1]});
+  const inp=document.querySelector(`input[data-k="img"][data-p="${p}"]`);
+  inp.value=saved.url;inp.dispatchEvent(new Event("input",{bubbles:true}));
+  document.querySelectorAll(`[data-th="${p}"]`).forEach(x=>{x.style.opacity=1;x.src=previewUrl});
   busy=false;setSt("✓ Imagen subida ("+name+"). Pulsa Actualizar página para usarla.","ok")}
  catch(e){busy=false;setSt("✕ "+e.message,"err")}
  finally{busy=false}};
@@ -240,8 +238,8 @@ async function uploadWorks(files){
   setSt(`⏳ Subiendo imagen ${i+1} de ${files.length}…`,"warn");
   try{
    const{name,url}=await prepWork(files[i],i);
-   await call("/api/upload",{kind:"work",name,data:url.split(",")[1]});
-   const path="trabajos/"+name;BL[path]=url;
+   const saved=await call("/api/upload",{kind:"work",name,data:url.split(",")[1]});
+   const path=saved.url;BL[path]=url;
    D.works.push([path,files[i].name.replace(/\.[^.]+$/,"").replace(/[_-]+/g," ").trim(),""]);ok++;
    try{localStorage.iaimbxt_site=JSON.stringify(D)}catch(e){}
   }catch(e){bad++;if(/Sesión/.test(e.message))break}}
@@ -260,12 +258,12 @@ $("fj").onchange=async function(){
  const name=f.name.replace(/[^A-Za-z0-9._-]+/g,"-").replace(/^[-.]+/,"");
  busy=true;setSt("⏳ Subiendo "+name+"…","warn");
  try{
-  const url=await toB64(f);
-  await call("/api/upload",{kind:"plugin",name,data:url.split(",")[1]});
+  const fileData=await toB64(f);
+  const saved=await call("/api/upload",{kind:"plugin",name,data:fileData.split(",")[1]});
   const inp=document.querySelector(`input[data-k="jar"][data-p="${p}"]`);
-  inp.value="plugins/"+name;inp.dispatchEvent(new Event("input",{bubbles:true}));
+  inp.value=saved.url;inp.dispatchEvent(new Event("input",{bubbles:true}));
   busy=false;setSt("✓ .jar subido ("+name+"). Pulsa Actualizar página para que se pueda descargar.","ok")}
  catch(e){busy=false;setSt("✕ "+e.message,"err")}
  finally{busy=false}};
-if(TK())enter();
+fetch("/api/session",{credentials:"same-origin",cache:"no-store"}).then(response=>{if(response.ok)enter()}).catch(()=>{});
 </script></body></html>
