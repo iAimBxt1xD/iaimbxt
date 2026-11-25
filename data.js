@@ -46,12 +46,12 @@ window.SITE={
  "theme": {
   "bg": "#121210",
   "card": "#212121",
-  "line": "#ffffff",
+  "line": "#2e2e2e",
   "text": "#ffffff",
   "muted": "#ffffff",
-  "accent": "#c7c7c7",
-  "g1": "#cccccc",
-  "g2": "#ffffff"
+  "accent": "#ffd60a",
+  "g1": "#ffe98a",
+  "g2": "#ff9f1c"
  },
  "speed": 90,
  "sec": {
