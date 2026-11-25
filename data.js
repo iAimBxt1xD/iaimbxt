@@ -157,12 +157,6 @@ window.SITE={
    "resign"
   ],
   [
-   "HyplexMC",
-   "Developer",
-   "hyplexmc.png",
-   "actual"
-  ],
-  [
    "MineHot",
    "Dueño",
    "minehot.png",
@@ -179,6 +173,12 @@ window.SITE={
    "Dueño",
    "shademc.png",
    "resign"
+  ],
+  [
+   "HyplexMC",
+   "Developer",
+   "hyplexmc.png",
+   "actual"
   ],
   [
    "Suncraft",
