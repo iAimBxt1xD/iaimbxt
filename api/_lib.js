@@ -40,7 +40,7 @@ const api = p => `https://api.github.com/repos/${REPO()}/contents/${p.split("/")
 // Token de GitHub: usa GITHUB_TOKEN si existe; si no, pide uno temporal a Vercel Connect (GitHub App)
 async function ghToken() {
   if (process.env.GITHUB_TOKEN) return process.env.GITHUB_TOKEN;
-  const { getToken } = require("@vercel/connect");
+  const { getToken } = await import("@vercel/connect"); // paquete ESM: import dinámico
   return getToken(process.env.CONNECT_CONNECTOR || "github/iaimbxt", { subject: { type: "app" } });
 }
 const headers = async () => ({
