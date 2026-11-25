@@ -88,8 +88,9 @@ window.SITE={
  },
  "plugins": [
   [
-   "SmartStaff",
-   "Moderacion dentro de tu servidor con modos de staff, congelacion, revives, sancionar, vanish y mucho mas."
+   "SmartPickUp",
+   "Autopickup con sonidos custom y es editable todo muy optimizado para no causar problemas.",
+   "plugins/SmartPickUp-1.0-SNAPSHOT.jar"
   ],
   [
    "Smartcolors",
@@ -100,6 +101,11 @@ window.SITE={
    "BxtDuels",
    "Duelos con tus amigos, tus rivales, entre mucho mas, creacion de kits a tu gusto, descripciones y menus editables. Requiere de una licencia de paga.",
    "plugins/BxtDuels-1.0.0.jar"
+  ],
+  [
+   "TotemLock",
+   "Un plugin que hara lo posible por evitar el ghost del totem dentro de tu servidor y editable con mensajes custom y mas.",
+   "plugins/TotemLock.jar"
   ]
  ],
  "servers": [
@@ -120,6 +126,12 @@ window.SITE={
    "Owner",
    "assaultmc.png",
    "resign"
+  ],
+  [
+   "AssaultMC",
+   "Developer",
+   "assaultmc.png",
+   "actual"
   ],
   [
    "LegendMC",
