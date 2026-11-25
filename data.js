@@ -93,15 +93,13 @@ window.SITE={
   ],
   [
    "Smartcolors",
-   "Colores en el chat y formatos editables a tu manera para darle estetica a tu servidor."
-  ],
-  [
-   "AimPvP",
-   "Modos De PvP diferentes entre todos esos spam, trigger, cooldown, instakill y muchos mas."
+   "Colores en el chat y formatos editables a tu manera para darle estetica a tu servidor.",
+   "plugins/SmartColors.jar"
   ],
   [
    "BxtDuels",
-   "Duelos con tus amigos, tus rivales, entre mucho mas, creacion de kits a tu gusto, descripciones y menus editables."
+   "Duelos con tus amigos, tus rivales, entre mucho mas, creacion de kits a tu gusto, descripciones y menus editables. Requiere de una licencia de paga.",
+   "plugins/BxtDuels-1.0.0.jar"
   ]
  ],
  "servers": [
