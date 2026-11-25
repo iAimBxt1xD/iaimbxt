@@ -271,7 +271,9 @@ function renderProjectRoute(){
  const gallery=[...new Set([page.cover,...(Array.isArray(page.images)?page.images:[])].filter(Boolean))];
  $("projectGallery").innerHTML=gallery.map((src,index)=>`<img src="${esc(S(src))}" alt="${esc(title)} — imagen ${index+1}" ${index>1?'loading="lazy"':''}>`).join("");
 }
-const head=k=>{const h=SITE.sec[k];return `<p class="eyebrow rv">${esc(h[0])}</p><h2 class="rv">${esc(h[1])}</h2>${h[2]?`<p class="hint">${esc(h[2])}</p>`:""}`};
+const SECTION_GRADIENT_DEFAULTS={servers:{start:"#f2f0e6",end:"#d6f36a"}};
+const safeColor=value=>/^#[0-9a-f]{6}$/i.test(String(value||""))?value:null;
+const head=k=>{const h=SITE.sec[k],gradient=SITE.sectionGradients?.[k],defaults=SECTION_GRADIENT_DEFAULTS[k],start=safeColor(gradient?.start)||defaults?.start,end=safeColor(gradient?.end)||defaults?.end,style=(gradient||defaults)&&(start||end)?` style="background-image:linear-gradient(100deg,${start||"#f2f0e6"},${end||"#ff9f1c"})"`:"";return `<p class="eyebrow rv">${esc(h[0])}</p><h2 class="rv"${style}>${esc(h[1])}</h2>${h[2]?`<p class="hint">${esc(h[2])}</p>`:""}`};
 const card=s=>{const a=s[3]==="actual";return `<div class="sv ${a?"act":""}"><span class="bd ${a?"on":"off"}">${a?"ACTUAL":"RESIGN"}</span>${img(s[2],s[0])}<h4>${esc(s[0])}</h4><span class="rk ${own(s[1])?"own":""}">${esc(s[1])}</span></div>`};
 const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target)}}),{threshold:.1});
 function render(){
