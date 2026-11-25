@@ -13,5 +13,7 @@ module.exports = async (req, res) => {
     return res.status(401).json({ error: "Contraseña incorrecta." });
   }
   ok(req);
-  res.status(200).json({ token: sign({ exp: Date.now() + 8 * 3600 * 1000 }) });
+  const token = sign({ exp: Date.now() + 8 * 3600 * 1000 });
+  res.setHeader("Set-Cookie", `iaimbxt_session=${token}; HttpOnly; Secure; SameSite=Strict; Path=/api; Max-Age=28800`);
+  res.status(200).json({ ok: true });
 };

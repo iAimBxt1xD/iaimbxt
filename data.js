@@ -5,7 +5,7 @@ window.SITE={
  "loader": {
   "role": "DEVELOPER DE SERVIDORES",
   "welcome": "BIENVENIDO",
-  "ms": 2600
+  "ms": 800
  },
  "hero": {
   "sticker": "Open Commisions...",
@@ -400,6 +400,7 @@ window.SITE={
   ]
  ],
  "works": [],
+ "pages": [],
  "contact": [
   [
    "Discord",

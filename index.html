@@ -117,6 +117,20 @@ nav ul.open{display:flex}section{padding:56px 5vw}}
 .more{background:none;border:0;color:var(--y);font:600 13px Inter;cursor:pointer;margin-bottom:14px;padding:0}
 .more:hover{text-decoration:underline}
 .works{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.project-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;margin-top:30px}
+.project-card{display:flex;flex-direction:column;background:var(--card);border:2px solid var(--line);border-radius:18px;padding:10px;transition:.2s;min-width:0}
+.project-card:hover{border-color:var(--y);transform:translateY(-4px);box-shadow:5px 5px 0 var(--y)}
+.project-card img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:12px;background:#0c0c0b}
+.project-card b{font:700 18px Sora;margin:12px 4px 2px}
+.project-card span{font-size:13px;color:var(--m);margin:0 4px}
+.project-detail{max-width:1100px;margin:auto;padding:70px 5vw}
+.project-back{display:inline-block;color:var(--y);font-weight:600;margin-bottom:28px}
+.project-detail h1{font:800 clamp(34px,7vw,68px)/1.05 Sora;margin:10px 0 18px}
+.project-detail .project-description{max-width:760px;color:#d4d2c6;white-space:pre-wrap;font-size:16px}
+.project-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin:36px 0}
+.project-gallery img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:14px;border:2px solid var(--line);background:#0c0c0b}
+.project-detail .project-cta{display:inline-flex;align-items:center;background:var(--y);color:#111;font-weight:700;border-radius:12px;padding:12px 18px}
+main[hidden]{display:none}
 .works figure{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:8px;cursor:zoom-in;transition:.2s;min-width:0}
 .works figure:hover{border-color:var(--y);transform:translate(-3px,-3px);box-shadow:5px 5px 0 var(--y)}
 .works img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;border-radius:12px}
@@ -210,7 +224,7 @@ h2:after{background:linear-gradient(90deg,var(--y),var(--g2))!important;-webkit-
   <ul id="links"><li><a href="#hero">Inicio</a></li><li><a href="#plugins">Plugins</a></li><li><a href="#servidores">Servidores</a></li><li><a href="#habilidades">Habilidades</a></li><li><a href="#referencias">Reseñas</a></li><li><a href="#trabajos">Trabajos</a></li><li><a href="#contacto">Contacto</a></li><li class="adm"><a href="admin.html">⚙ Admin panel</a></li></ul>
   <a class="dc" id="nvDc" target="_blank" rel="noopener">Discord</a>
 </nav>
-<main>
+<main id="siteMain">
 <section id="hero" class="hero"><div class="hero__c"><div>
   <span class="stk" id="hSt"></span><span class="hi" id="hHi"></span>
   <h1><span id="hName"></span></h1>
@@ -226,9 +240,10 @@ h2:after{background:linear-gradient(90deg,var(--y),var(--g2))!important;-webkit-
   <div class="mq__ctl"><button class="btn" id="mqBtn" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="4" width="5" height="16" rx="1"/><rect x="14" y="4" width="5" height="16" rx="1"/></svg><span>Parar lista de servidores</span></button></div></section>
 <section id="habilidades"><div id="h_skills"></div><div class="g" id="skl"></div></section>
 <section id="referencias"><div id="h_reviews"></div><div class="rev" id="rev"></div></section>
-<section id="trabajos"><div id="h_works"></div><div class="works" id="works"></div></section>
+<section id="trabajos"><div id="h_works"></div><div class="works" id="works"></div><div class="project-grid" id="projectGrid"></div></section>
 <section id="contacto"><div id="h_contact"></div><div class="g" id="ctc"></div></section>
 </main>
+<main id="projectMain" hidden><section class="project-detail"><a class="project-back" href="index.html#trabajos">← Volver a todos los trabajos</a><p class="eyebrow" id="projectCategory"></p><h1 id="projectTitle"></h1><p class="project-description" id="projectDescription"></p><div class="project-gallery" id="projectGallery"></div><a class="project-cta" id="projectContact" href="index.html#contacto">Hablemos de tu proyecto</a></section></main>
 <footer id="ft"></footer>
 <div id="rm" class="modal"><div class="mbox"><button class="x" data-close>×</button><h3 id="rmA"></h3><small id="rmR"></small><p id="rmQ"></p></div></div>
 <div id="wm" class="modal"><div class="mbox wbox"><button class="x" data-close>×</button><h3>Todos mis trabajos</h3><div class="works" id="wAll"></div></div></div>
@@ -240,11 +255,25 @@ let SITE=window.SITE,statsDone=PREVIEW,BL={};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const S=p=>BL[p]||p;
+const imageSource=(path,prefix="")=>/^(https?:|data:|blob:)/i.test(String(path||""))?String(path):prefix+String(path||"");
 const fig=(w,i,rv)=>`<figure class="${rv?"rv":""}" data-i="${i}"><img src="${esc(S(w[0]))}" alt="${esc(w[1])}" loading="lazy"><figcaption>${esc(w[1])}</figcaption></figure>`;
 const url=u=>/^(https?:|mailto:|#)/.test(u)?esc(u):"#";
 const own=r=>r==="Dueño"||r==="Owner";
-const img=(f,n)=>`<span class="im"><img src="img/${esc(f)}" alt="" data-n="${esc(n)}" onerror="this.parentNode.textContent=this.dataset.n.charAt(0)"></span>`;
-const head=k=>{const h=SITE.sec[k];return `<p class="eyebrow rv">${esc(h[0])}</p><h2 class="rv">${esc(h[1])}</h2>${h[2]?`<p class="hint">${esc(h[2])}</p>`:""}`};
+const img=(f,n)=>`<span class="im"><img src="${esc(imageSource(f,"img/"))}" alt="" data-n="${esc(n)}" onerror="this.parentNode.textContent=this.dataset.n.charAt(0)"></span>`;
+function renderProjectRoute(){
+ const slug=new URLSearchParams(location.search).get("pagina"),page=(SITE.pages||[]).find(item=>item.slug===slug&&item.visible!==false);
+ if(!page)return;
+ $("siteMain").hidden=true;$("projectMain").hidden=false;
+ document.querySelectorAll("#links li:not(.adm)").forEach(item=>item.hidden=true);
+ const title=page.title||"Proyecto";document.title=`${title} | ${SITE.brand||"Portafolio"}`;
+ document.querySelector('meta[name="description"]').content=(page.description||"").slice(0,160);
+ $("projectCategory").textContent=page.category||"Proyecto";$("projectTitle").textContent=title;$("projectDescription").textContent=page.description||"";
+ const gallery=[...new Set([page.cover,...(Array.isArray(page.images)?page.images:[])].filter(Boolean))];
+ $("projectGallery").innerHTML=gallery.map((src,index)=>`<img src="${esc(S(src))}" alt="${esc(title)} — imagen ${index+1}" ${index>1?'loading="lazy"':''}>`).join("");
+}
+const SECTION_GRADIENT_DEFAULTS={servers:{start:"#f2f0e6",end:"#d6f36a"}};
+const safeColor=value=>/^#[0-9a-f]{6}$/i.test(String(value||""))?value:null;
+const head=k=>{const h=SITE.sec[k],gradient=SITE.sectionGradients?.[k],defaults=SECTION_GRADIENT_DEFAULTS[k],start=safeColor(gradient?.start)||defaults?.start,end=safeColor(gradient?.end)||defaults?.end,style=(gradient||defaults)&&(start||end)?` style="background-image:linear-gradient(100deg,${start||"#f2f0e6"},${end||"#ff9f1c"})"`:"";return `<p class="eyebrow rv">${esc(h[0])}</p><h2 class="rv"${style}>${esc(h[1])}</h2>${h[2]?`<p class="hint">${esc(h[2])}</p>`:""}`};
 const card=s=>{const a=s[3]==="actual";return `<div class="sv ${a?"act":""}"><span class="bd ${a?"on":"off"}">${a?"ACTUAL":"RESIGN"}</span>${img(s[2],s[0])}<h4>${esc(s[0])}</h4><span class="rk ${own(s[1])?"own":""}">${esc(s[1])}</span></div>`};
 const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target)}}),{threshold:.1});
 function render(){
@@ -264,11 +293,15 @@ function render(){
  $("skl").innerHTML=D.skills.map(s=>`<div class="c rv"><h3>${esc(s[0])}</h3><p>${esc(s[1])}</p><div class="tags">${String(s[2]).split(",").map(x=>x.trim()).filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join("")}</div></div>`).join("");
  $("rev").innerHTML=D.reviews.map((r,i)=>`<div class="r rv" style="transition-delay:${(i%3)*.12}s"><p class="cl">“${esc(r[4])}”</p>${r[4].length>140?`<button class="more" data-i="${i}">Ver más</button>`:""}<div class="who">${img(r[3],r[1])}<div><b>${esc(r[1])}</b><span>${esc(r[2])} · ${esc(r[0])}</span></div></div></div>`).join("");
  $("works").innerHTML=D.works.length?D.works.slice(0,3).map((w,i)=>fig(w,i,1)).join("")+(D.works.length>3?'<button type="button" class="wmore rv" id="wMore"><span class="pl"><i>+</i></span><span>Ver más</span></button>':""):'<p class="hint" style="margin:0">Próximamente...</p>';
+ const pages=(D.pages||[]).filter(page=>page&&page.visible!==false&&page.slug);
+ $("projectGrid").innerHTML=pages.map(page=>`<a class="project-card rv" href="?pagina=${encodeURIComponent(page.slug)}">${page.cover?`<img src="${esc(S(page.cover))}" alt="Portada de ${esc(page.title)}" loading="lazy">`:'<span class="pl">Proyecto</span>'}<b>${esc(page.title)}</b><span>${esc(page.category||"Proyecto")}</span></a>`).join("");
  $("ctc").innerHTML=D.contact.map(c=>`<div class="c rv"><h3>${esc(c[0])}</h3><p>${esc(c[1])}</p><code>${esc(c[2])}</code>${c[4]?`<a class="btn" href="${url(c[4])}" target="_blank" rel="noopener">${esc(c[3])}</a>`:`<button class="btn p" data-copy="${esc(c[2])}">${esc(c[3])}</button>`}</div>`).join("");
  $("ft").textContent=D.footer;
  document.querySelectorAll(".rv:not(.in)").forEach(el=>PREVIEW?el.classList.add("in"):io.observe(el));
+ renderProjectRoute();
 }
 render();
+if(!PREVIEW)fetch("/api/site",{cache:"no-store"}).then(response=>response.ok?response.json():null).then(payload=>{if(payload&&payload.site){SITE=payload.site;SITE.pages=Array.isArray(SITE.pages)?SITE.pages:[];render()}}).catch(()=>{});
 try{if(localStorage.iaimbxt_admin==="1")document.querySelector(".adm").classList.add("on")}catch(e){}
 /* servidores: pausa */
 {const tr=$("srv"),b=$("mqBtn"),L=b.querySelector("span"),I=b.querySelector("svg");
