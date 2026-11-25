@@ -193,6 +193,12 @@ window.SITE={
    "resign"
   ],
   [
+   "SneakMC",
+   "Jr - Mod",
+   "sneakmc.png",
+   "actual"
+  ],
+  [
    "OrionMC",
    "Media Manager",
    "orionmc.png",
@@ -275,12 +281,6 @@ window.SITE={
    "Developer",
    "firemc.png",
    "resign"
-  ],
-  [
-   "SneakMC",
-   "Jr - Mod",
-   "sneakmc.png",
-   "actual"
   ]
  ],
  "skills": [
