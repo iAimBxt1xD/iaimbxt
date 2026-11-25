@@ -88,8 +88,8 @@ window.SITE={
  },
  "plugins": [
   [
-   "SmartPickUp",
-   "Autopickup con sonidos custom y es editable todo muy optimizado para no causar problemas.",
+   "SmartPickUP",
+   "Un Autopickup. Para que los items no se queden en el suelo y vayan directamente a tu inventario con avisos cuando el inventario este lleno con sonidos custom.",
    "plugins/SmartPickUp-1.0-SNAPSHOT.jar"
   ],
   [
@@ -98,14 +98,19 @@ window.SITE={
    "plugins/SmartColors.jar"
   ],
   [
-   "BxtDuels",
+   "BxtDuels (De Paga)",
    "Duelos con tus amigos, tus rivales, entre mucho mas, creacion de kits a tu gusto, descripciones y menus editables. Requiere de una licencia de paga.",
-   "plugins/BxtDuels-1.0.0.jar"
+   "plugins/BxtDuels.jar"
   ],
   [
    "TotemLock",
-   "Un plugin que hara lo posible por evitar el ghost del totem dentro de tu servidor y editable con mensajes custom y mas.",
+   "Un plugin para evitar el ghost del totem molestoso dentro de tu servidor mejorando la experiencia de cada jugador.",
    "plugins/TotemLock.jar"
+  ],
+  [
+   "SmartEffects",
+   "Plugin conectandose con WorldGuard el cual permitira poner efectos en la region que eligas ningun inconveniente y con niveles de cada efecto.",
+   "plugins/SmartEffects-1.0.0.jar"
   ]
  ],
  "servers": [
