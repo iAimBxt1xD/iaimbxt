@@ -45,13 +45,13 @@ window.SITE={
  },
  "theme": {
   "bg": "#121210",
-  "card": "#1a1a17",
-  "line": "#2e2e29",
-  "text": "#878787",
+  "card": "#212121",
+  "line": "#ffffff",
+  "text": "#ffffff",
   "muted": "#ffffff",
-  "accent": "#b8b8b8",
-  "g1": "#4f4f4f",
-  "g2": "#262626"
+  "accent": "#c7c7c7",
+  "g1": "#cccccc",
+  "g2": "#ffffff"
  },
  "speed": 90,
  "sec": {
