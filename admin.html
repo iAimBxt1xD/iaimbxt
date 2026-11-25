@@ -44,7 +44,7 @@ h2{font:700 22px Sora;margin-bottom:4px}h3{font:700 15px Sora;margin:22px 0 10px
 .gp{height:46px;border-radius:12px;margin:14px 0;border:2px solid var(--line)}
 .pre{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
 .pre button{display:flex;gap:8px;align-items:center}.pre i{display:inline-block;width:36px;height:12px;border-radius:6px}
-.work-row.on{border-color:var(--y)}.work-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.work-head strong{font:600 14px Sora}.work-head span{color:var(--m);font:12px 'JetBrains Mono';margin-left:8px}.work-thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.work-thumb{position:relative}.work-thumb img{display:block;width:64px;height:48px;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:#0c0c0b}.work-thumb button{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border:1px solid var(--line);border-radius:50%;background:#0c0c0b;color:var(--t);cursor:pointer}.work-empty{color:var(--m);font-size:13px;padding:8px 0}
+.work-row.on{border-color:var(--y)}.work-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.work-head strong{font:600 14px Sora}.work-head span{color:var(--m);font:12px 'JetBrains Mono';margin-left:8px}.work-pages{display:grid;gap:10px;margin-bottom:14px}.work-page{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px;background:#11110f}.work-page:hover,.work-page:focus{outline:none;border-color:var(--y)}.work-page-preview{width:110px;height:68px;display:grid;place-items:center;overflow:hidden;border-radius:8px;background:#0c0c0b;border:1px dashed var(--line);color:var(--m);font-size:12px}.work-page-preview img{width:100%;height:100%;object-fit:cover}.work-page-info strong{display:block;font:600 13px Sora}.work-page-info small{display:block;color:var(--m);font-size:12px;margin-top:4px}.work-page .tools{margin:0;justify-content:flex-end}.work-page .tools button{white-space:nowrap}@media(max-width:600px){.work-page{grid-template-columns:76px minmax(0,1fr)}.work-page-preview{width:76px;height:56px}.work-page .tools{grid-column:1/-1;justify-content:flex-start}}
 .tip{background:rgba(255,214,10,.08);border:1px solid rgba(255,214,10,.3);border-radius:12px;padding:12px 14px;font-size:13.5px;color:#d4d2c6;margin-bottom:18px}
 textarea.out{height:260px;font:12px 'JetBrains Mono';color:var(--y)}
 ol{margin:10px 0 18px 20px;line-height:1.9;font-size:14.5px}
@@ -60,7 +60,7 @@ ol{margin:10px 0 18px 20px;line-height:1.9;font-size:14.5px}
 <header><b>iAimBxt_ · Admin</b>
 <div class="hb"><span id="st"></span><button class="btn s on" id="tpv">Vista previa</button><button class="btn p" id="pub">🚀 Actualizar página</button><a class="btn s" href="index.html">Ver sitio</a><button class="btn s d" id="out">Salir</button></div></header>
 <div class="lay" id="lay"><div class="ed"><div class="tabs" id="tabs"></div><div id="panel"></div></div>
-<div class="pvw"><small>VISTA PREVIA EN VIVO — lo que cambies se ve aquí al instante</small><input type="file" id="fi" class="hide" accept="image/png,image/jpeg,image/webp,image/gif"><input type="file" id="fw" class="hide" multiple accept="image/png,image/jpeg,image/webp,image/gif"><input type="file" id="fj" class="hide" accept=".jar"><iframe id="pv" src="index.html?preview=1" title="Vista previa"></iframe></div></div></div>
+<div class="pvw"><small>VISTA PREVIA EN VIVO — lo que cambies se ve aquí al instante</small><input type="file" id="fi" class="hide" accept="image/png,image/jpeg,image/webp,image/gif"><input type="file" id="fw" class="hide" multiple accept="image/png,image/jpeg,image/webp,image/gif"><input type="file" id="fp" class="hide" accept="image/png,image/jpeg,image/webp,image/gif"><input type="file" id="fj" class="hide" accept=".jar"><iframe id="pv" src="index.html?preview=1" title="Vista previa"></iframe></div></div></div>
 
 <script src="/api/site"></script>
 <script>
@@ -106,8 +106,8 @@ const F=(label,p,o={})=>{const v=getp(D,p),a=`data-p="${p}"`;let i;
  return `<div class="${o.w?"w":""}"><label>${label}</label>${i}</div>`};
 const grid=x=>`<div class="f">${x}</div>`;
 const LST=(path,cols)=>getp(D,path).map((r,i)=>`<div class="row">${grid(cols.map(([l,j,o])=>F(l,`${path}.${i}.${j}`,o)).join(""))}<div class="tools"><button class="btn s" data-a="up" data-l="${path}" data-i="${i}">↑</button><button class="btn s" data-a="dn" data-l="${path}" data-i="${i}">↓</button><button class="btn s d" data-a="del" data-l="${path}" data-i="${i}">Eliminar</button><span>#${i+1}</span></div></div>`).join("")+`<div class="bar"><button class="btn p" data-a="add" data-l="${path}">+ Agregar</button></div>`;
-const workImages=w=>[w[0],...(Array.isArray(w[3])?w[3]:[])].filter(Boolean);
-const workList=()=>D.works.map((w,i)=>{const images=workImages(w);return `<div class="row work-row" data-work-index="${i}"><div class="work-head"><div><strong>Trabajo ${i+1}</strong><span>${images.length} imagen${images.length===1?"":"es"}</span></div><button type="button" class="btn s" data-a="addworkimages" data-i="${i}">Añadir imágenes</button></div><div class="work-thumbs">${images.map((path,j)=>`<div class="work-thumb"><img src="${esc(BL[path]||imageSource(path))}" alt="Captura ${j+1} de ${esc(w[1]||`trabajo ${i+1}`)}"><button type="button" data-a="delworkimage" data-i="${i}" data-j="${j}" aria-label="Quitar imagen ${j+1}">×</button></div>`).join("")||'<span class="work-empty">Aún no hay imágenes. Pega o añade capturas aquí.</span>'}</div>${grid(F("Nombre",`works.${i}.1`)+F("Descripción (se ve al abrir la foto)",`works.${i}.2`,{w:1}))}<div class="tools"><button class="btn s" data-a="up" data-l="works" data-i="${i}">↑</button><button class="btn s" data-a="dn" data-l="works" data-i="${i}">↓</button><button class="btn s d" data-a="del" data-l="works" data-i="${i}">Eliminar</button><span>#${i+1}</span></div></div>`}).join("")+`<div class="bar"><button class="btn p" data-a="addwork">+ Nuevo trabajo</button></div>`;
+const workPages=w=>[w[0]||"",...(Array.isArray(w[3])?w[3]:[])];
+const workList=()=>D.works.map((w,i)=>{const pages=workPages(w),count=pages.length;return `<div class="row work-row" data-work-index="${i}"><div class="work-head"><div><strong>Trabajo ${i+1}</strong><span>${count} página${count===1?"":"s"}</span></div><button type="button" class="btn s" data-a="addworkpage" data-i="${i}">+ Agregar página</button></div><div class="work-pages">${pages.map((path,j)=>`<div class="work-page" data-work-index="${i}" data-page-index="${j}" tabindex="0" aria-label="Página ${j+1} del trabajo ${esc(w[1]||i+1)}"><div class="work-page-preview">${path?`<img src="${esc(BL[path]||imageSource(path))}" alt="Imagen de la página ${j+1}">`:`<span>Sin imagen</span>`}</div><div class="work-page-info"><strong>Página ${j+1}</strong><small>${path?"Sube otra imagen o selecciona esta tarjeta y pega para reemplazarla.":"Pulsa Subir imagen o selecciona esta tarjeta y pega (Ctrl/⌘+V)."}</small></div><div class="tools"><button type="button" class="btn s" data-a="uploadpage">Subir imagen</button><button type="button" class="btn s d" data-a="delworkpage" data-i="${i}" data-j="${j}" aria-label="Quitar página ${j+1}">Quitar</button></div></div>`).join("")}</div>${grid(F("Nombre",`works.${i}.1`)+F("Descripción (se ve al abrir la foto)",`works.${i}.2`,{w:1}))}<div class="tools"><button class="btn s" data-a="up" data-l="works" data-i="${i}">↑</button><button class="btn s" data-a="dn" data-l="works" data-i="${i}">↓</button><button class="btn s d" data-a="del" data-l="works" data-i="${i}">Eliminar</button><span>#${i+1}</span></div></div>`}).join("")+`<div class="bar"><button class="btn p" data-a="addwork">+ Nuevo trabajo</button></div>`;
 const TITLE=(t,s)=>`<h2>${t}</h2><p class="sub">${s}</p>`;
 const SEC=k=>grid(F("Etiqueta pequeña",`sec.${k}.0`)+F("Título",`sec.${k}.1`)+F("Descripción",`sec.${k}.2`));
 const TABS={
@@ -130,7 +130,7 @@ plugins:["Plugins",()=>TITLE("Plugins","Los que hiciste tú. Sube el .jar y quie
 servers:["Servidores",()=>TITLE("Servidores","Estado ACTUAL (verde) o RESIGN (rojo). La imagen es el nombre del archivo dentro de img/.")+LST("servers",[["Nombre",0],["Rango",1],["Imagen (archivo en img/)",2,{k:"img",pre:"img/"}],["Estado",3,{k:"sel",o:[["resign","RESIGN (ya no estoy)"],["actual","ACTUAL (sigo en el server)"]]}]])],
 skills:["Habilidades",()=>TITLE("Habilidades","Las etiquetas van separadas por coma.")+LST("skills",[["Título",0],["Descripción",1],["Etiquetas (separadas por coma)",2,{w:1}]])],
 reviews:["Reseñas",()=>TITLE("Reseñas","Lo que dicen los dueños.")+LST("reviews",[["Servidor",0],["Autor",1],["Rango",2],["Imagen (archivo en img/)",3,{k:"img",pre:"img/"}],["Texto",4,{k:"area",w:1}]])],
-works:["Trabajos",()=>TITLE("Trabajos","Cada trabajo admite varias capturas. Para añadirlas a uno existente, usa Añadir imágenes en su tarjeta; para crear uno nuevo, selecciónalas aquí o arrástralas juntas.")+`<div class="drop" id="drop" tabindex="0" aria-label="Arrastra o pega imágenes para crear un nuevo trabajo"><b>Arrastra o sube imágenes para crear un trabajo</b><br><br><button class="btn p" data-a="pickworks">Elegir varias imágenes</button><small>En el selector, usa Ctrl + clic (Windows/Linux) o ⌘ + clic (Mac) para elegir más de una. También puedes pegar capturas con Ctrl/⌘ + V dentro de una tarjeta. Al terminar pulsa Actualizar página.</small></div>`+workList()],
+works:["Trabajos",()=>TITLE("Trabajos","Cada captura va en su propia página. Pulsa Agregar página en el trabajo y luego sube una imagen o selecciona su página y pega con Ctrl/⌘ + V.")+`<div class="drop" id="drop" tabindex="0" aria-label="Arrastra o pega imágenes para crear un nuevo trabajo"><b>Arrastra o sube imágenes para crear un trabajo</b><br><br><button class="btn p" data-a="pickworks">Elegir varias imágenes</button><small>También puedes crear un trabajo nuevo y agregar sus páginas una por una. Al terminar pulsa Actualizar página.</small></div>`+workList()],
 contact:["Contacto",()=>TITLE("Contacto","Si dejas el link vacío, el botón copia el texto de arriba (ej. tu usuario de Discord).")+LST("contact",[["Título",0],["Subtítulo",1],["Texto / usuario",2],["Texto del botón",3],["Link (vacío = copiar)",4,{w:1}]])],
 pub:["Publicar",()=>TITLE("Publicar cambios","Pulsa el botón y tu portafolio real se actualiza solo.")+
  `<div class="tip">Al pulsar <b>Actualizar página</b>, los cambios se guardan en Blob y quedan disponibles al instante, sin esperar un despliegue.</div>
@@ -157,15 +157,16 @@ $("panel").addEventListener("input",e=>{const t=e.target,p=t.dataset.p;if(!p)ret
  if(t.dataset.k==="img")document.querySelectorAll(`[data-th="${p}"]`).forEach(x=>{x.style.opacity=1;x.src=imageSource(v,t.dataset.pre)});
  changed()});
 $("tabs").onclick=e=>{const k=e.target.dataset.t;if(k){tab=k;draw()}};
-$("panel").onclick=e=>{const row=e.target.closest("[data-work-index]");if(row)selectedWorkIndex=+row.dataset.workIndex;else if(e.target.closest("#drop"))selectedWorkIndex=null;const a=e.target.dataset.a;if(!a)return;if(a==="publish"){pub();return}
+$("panel").onclick=e=>{const row=e.target.closest("[data-work-index]");if(row){selectedWorkIndex=+row.dataset.workIndex;const page=e.target.closest("[data-page-index]");selectedWorkPageIndex=page?+page.dataset.pageIndex:null}else if(e.target.closest("#drop")){selectedWorkIndex=null;selectedWorkPageIndex=null}const a=e.target.dataset.a;if(!a)return;if(a==="publish"){pub();return}
  if(a==="dl"){download();return}
  if(a==="cp"){try{navigator.clipboard.writeText(dataJs())}catch(x){}e.target.textContent="¡Copiado!";return}
  if(a==="upimg"){UPP=e.target.dataset.p;$("fi").value="";$("fi").click();return}
  if(a==="upjar"){UPP=e.target.dataset.p;$("fj").value="";$("fj").click();return}
  if(a==="pickworks"){selectedWorkIndex=null;$("fw").value="";$("fw").click();return}
- if(a==="addworkimages"){selectedWorkIndex=+e.target.dataset.i;$("fw").value="";$("fw").click();return}
+ if(a==="addworkpage"){const w=D.works[+e.target.dataset.i];if(!Array.isArray(w[3]))w[3]=[];w[3].push("");changed();draw();setSt("Página nueva lista: sube una imagen o pégala en su tarjeta.","warn");return}
+ if(a==="uploadpage"){const page=e.target.closest("[data-page-index]");selectedWorkIndex=+page.dataset.workIndex;selectedWorkPageIndex=+page.dataset.pageIndex;$("fp").value="";$("fp").click();return}
+ if(a==="delworkpage"){const w=D.works[+e.target.dataset.i],page=+e.target.dataset.j;if(page===0)w[0]=Array.isArray(w[3])?w[3].shift()||"":"";else if(Array.isArray(w[3]))w[3].splice(page-1,1);if(!Array.isArray(w[3])||!w[3].length)w[3]=[];selectedWorkPageIndex=null;changed();draw();return}
  if(a==="addwork"){D.works.push(["","","",[]]);changed();draw();return}
- if(a==="delworkimage"){const w=D.works[+e.target.dataset.i],images=workImages(w);images.splice(+e.target.dataset.j,1);w[0]=images.shift()||"";w[3]=images;changed();draw();return}
  const i=+e.target.dataset.i,l=e.target.dataset.l,L=l?getp(D,l):null;
  if(a==="add"){L.push(clone(BLANK[l]));changed();draw();$("panel").parentNode.scrollTo(0,1e6);return}
  if(a==="del"){if(!confirm("¿Eliminar este elemento?"))return;L.splice(i,1)}
@@ -199,7 +200,7 @@ async function pub(){
  finally{busy=false;btns.forEach(b=>{b.disabled=false;b.textContent=b.dataset.t})}}
 $("pub").onclick=pub;
 /* ---------- subir imágenes a img/ ---------- */
-let UPP=null,selectedWorkIndex=null;
+let UPP=null,selectedWorkIndex=null,selectedWorkPageIndex=null;
 const toB64=b=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>rej(new Error("No se pudo leer el archivo"));r.readAsDataURL(b)});
 async function prep(file){
  const m=file.name.match(/\.(png|jpe?g|webp|gif)$/i);if(!m)throw new Error("Usa una imagen png, jpg, webp o gif.");
@@ -254,13 +255,23 @@ async function uploadWorks(files,targetIndex=null){
   }catch(e){bad++;if(/Sesión/.test(e.message))break}}
  busy=false;changed();postBL();if(tab==="works")draw();
  setSt(`✓ ${ok} imagen(es) añadida(s)${bad?` · ✕ ${bad} fallaron`:""}. Ya puedes escribir el nombre y la descripción del trabajo.`,bad?"warn":"ok")}
+async function uploadWorkPage(file,workIndex,pageIndex){
+ if(!file||busy)return;const work=D.works[workIndex];if(!work)return;
+ busy=true;setSt(`⏳ Subiendo imagen de la página ${pageIndex+1}…`,"warn");
+ try{
+  const{name,url}=await prepWork(file,pageIndex),saved=await call("/api/upload",{kind:"work",name,data:url.split(",")[1]}),path=saved.url;BL[path]=url;
+  if(pageIndex===0)work[0]=path;else{if(!Array.isArray(work[3]))work[3]=[];while(work[3].length<pageIndex)work[3].push("");work[3][pageIndex-1]=path}
+  busy=false;changed();postBL();draw();setSt(`✓ Imagen guardada en la página ${pageIndex+1}. Pulsa Actualizar página para publicar.`,"ok")
+ }catch(e){setSt("✕ "+e.message,"err")}
+ finally{busy=false}}
 {const pn=$("panel"),dz=e=>e.target.closest&&e.target.closest("#drop"),work=e=>e.target.closest&&e.target.closest(".work-row");
- pn.addEventListener("focusin",e=>{const row=work(e);if(row)selectedWorkIndex=+row.dataset.workIndex});
- pn.addEventListener("paste",e=>{if(tab!=="works"||busy)return;const files=[...e.clipboardData.items].filter(item=>item.kind==="file"&&/^image\//.test(item.type)).map(item=>item.getAsFile()).filter(Boolean);if(!files.length)return;e.preventDefault();uploadWorks(files,e.target.closest("#drop")?null:selectedWorkIndex)});
+ pn.addEventListener("focusin",e=>{const row=work(e);if(row)selectedWorkIndex=+row.dataset.workIndex;const page=e.target.closest("[data-page-index]");selectedWorkPageIndex=page?+page.dataset.pageIndex:null});
+ pn.addEventListener("paste",e=>{if(tab!=="works"||busy)return;const files=[...e.clipboardData.items].filter(item=>item.kind==="file"&&/^image\//.test(item.type)).map(item=>item.getAsFile()).filter(Boolean);if(!files.length)return;const page=e.target.closest("[data-page-index]"),workIndex=page?+page.dataset.workIndex:selectedWorkIndex,pageIndex=page?+page.dataset.pageIndex:selectedWorkPageIndex;e.preventDefault();if(Number.isInteger(workIndex)&&Number.isInteger(pageIndex)){uploadWorkPage(files[0],workIndex,pageIndex);return}uploadWorks(files,e.target.closest("#drop")?null:selectedWorkIndex)});
  pn.addEventListener("dragover",e=>{const d=dz(e)||work(e);if(d){e.preventDefault();d.classList.add("on")}});
  pn.addEventListener("dragleave",e=>{const d=dz(e)||work(e);if(d)d.classList.remove("on")});
- pn.addEventListener("drop",e=>{const d=dz(e),row=work(e);if(!d&&!row)return;e.preventDefault();(d||row).classList.remove("on");uploadWorks(e.dataTransfer.files,row?+row.dataset.workIndex:null)})}
+ pn.addEventListener("drop",e=>{const d=dz(e),page=e.target.closest("[data-page-index]"),row=work(e);if(!d&&!row)return;e.preventDefault();(d||row).classList.remove("on");if(page&&e.dataTransfer.files.length===1)uploadWorkPage(e.dataTransfer.files[0],+page.dataset.workIndex,+page.dataset.pageIndex);else uploadWorks(e.dataTransfer.files,d?null:row?+row.dataset.workIndex:null)})}
 $("fw").onchange=function(){uploadWorks(this.files,selectedWorkIndex);this.value=""};
+$("fp").onchange=function(){const file=this.files[0];if(file&&Number.isInteger(selectedWorkIndex)&&Number.isInteger(selectedWorkPageIndex))uploadWorkPage(file,selectedWorkIndex,selectedWorkPageIndex);this.value=""};
 /* ---------- subir el .jar de un plugin ---------- */
 $("fj").onchange=async function(){
  const f=this.files[0],p=UPP;if(!f||!p||busy)return;
