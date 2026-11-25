@@ -1,5 +1,5 @@
 window.SITE={
- "title": "iAimBxt_ | Developer de servidores Minecraft",
+ "title": "iAimBxt_ | Developer de servidores MineCraft",
  "brand": "iAimBxt_",
  "logo": "img/logo.png",
  "loader": {
@@ -9,7 +9,7 @@ window.SITE={
  },
  "hero": {
   "sticker": "Open Commisions...",
-  "hi": "Hola, soy",
+  "hi": "Conoce A",
   "name": "iAimBxt_",
   "typed": [
    "Experto En Estética",
