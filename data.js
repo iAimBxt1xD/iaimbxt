@@ -122,12 +122,6 @@ window.SITE={
    "resign"
   ],
   [
-   "AssaultMC",
-   "Developer",
-   "assaultmc.png",
-   "actual"
-  ],
-  [
    "LegendMC",
    "Dueño",
    "legendmc.png",
