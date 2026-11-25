@@ -411,17 +411,12 @@ window.SITE={
  "works": [
   [
    "trabajos/nightpvp-mwwlg6mu0.webp",
-   "MineNight ━━━━ FullPvP + Configuracion",
+   "MineNight ━━━━ FullPvP",
    ""
   ],
   [
    "img/cashmclobby.png",
    "CashMC ━━━━ Lobby",
-   ""
-  ],
-  [
-   "img/fnafboxstreakmc.png",
-   "StreakMC ━━━━ FnafBox + Configuracion",
    ""
   ],
   [
@@ -447,6 +442,11 @@ window.SITE={
   [
    "img/cashmcbajobox.png",
    "CashMC ━━━━ BajoBox",
+   ""
+  ],
+  [
+   "img/fnafboxstreakmc.png",
+   "StreakMC ━━━━ FnafBox",
    ""
   ]
  ],
