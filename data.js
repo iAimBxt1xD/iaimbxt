@@ -1,11 +1,11 @@
 window.SITE={
- "title": "iAimBxt_ | Developer de servidores MineCraft",
+ "title": "iAimBxt_ | Developer de servidores Minecraft",
  "brand": "iAimBxt_",
  "logo": "img/logo.png",
  "loader": {
   "role": "DEVELOPER DE SERVIDORES",
   "welcome": "BIENVENIDO",
-  "ms": 800
+  "ms": 2600
  },
  "hero": {
   "sticker": "Open Commisions...",
@@ -47,11 +47,11 @@ window.SITE={
   "bg": "#121210",
   "card": "#1a1a17",
   "line": "#2e2e29",
-  "text": "#f2f0e6",
-  "muted": "#8f8d82",
-  "accent": "#ffd60a",
-  "g1": "#ffe98a",
-  "g2": "#ff9f1c"
+  "text": "#878787",
+  "muted": "#ffffff",
+  "accent": "#b8b8b8",
+  "g1": "#4f4f4f",
+  "g2": "#262626"
  },
  "speed": 90,
  "sec": {
@@ -88,20 +88,29 @@ window.SITE={
  },
  "plugins": [
   [
-   "SmartStaff",
-   "Moderacion dentro de tu servidor con modos de staff, congelacion, revives, sancionar, vanish y mucho mas."
+   "SmartPickUP",
+   "Un Autopickup. Para que los items no se queden en el suelo y vayan directamente a tu inventario con avisos cuando el inventario este lleno con sonidos custom.",
+   "plugins/SmartPickUp-1.0-SNAPSHOT.jar"
   ],
   [
    "Smartcolors",
-   "Colores en el chat y formatos editables a tu manera para darle estetica a tu servidor."
+   "Imagina colores en el chat y formatos editables a tu manera para darle estetica a tu servidor.",
+   "plugins/SmartColors.jar"
   ],
   [
-   "AimPvP",
-   "Modos De PvP diferentes entre todos esos spam, trigger, cooldown, instakill y muchos mas."
+   "BxtDuels (De Paga)",
+   "Haz duelos con tus amigos, tus rivales, entre mucho mas, creacion de kits a tu gusto, descripciones y menus editables. Requiere de una licencia de paga.",
+   "plugins/BxtDuels-1.0.0.jar"
   ],
   [
-   "BxtDuels",
-   "Duelos con tus amigos, tus rivales, entre mucho mas, creacion de kits a tu gusto, descripciones y menus editables."
+   "TotemLock",
+   "Plugin para evitar el ghost del totem molestoso dentro de tu servidor mejorando la experiencia de cada jugador.",
+   "plugins/TotemLock.jar"
+  ],
+  [
+   "SmartEffects",
+   "Un plugin conectandose con WorldGuard el cual permitira poner efectos en la region que eligas ningun inconveniente y con niveles de cada efecto.",
+   "plugins/SmartEffects-1.0.0.jar"
   ]
  ],
  "servers": [
@@ -124,12 +133,6 @@ window.SITE={
    "resign"
   ],
   [
-   "AssaultMC",
-   "Developer",
-   "assaultmc.png",
-   "actual"
-  ],
-  [
    "LegendMC",
    "Dueño",
    "legendmc.png",
@@ -145,19 +148,13 @@ window.SITE={
    "MineDown",
    "Developer",
    "minedown.png",
-   "actual"
+   "resign"
   ],
   [
    "MinePan",
    "Dueño",
    "minepan.png",
    "resign"
-  ],
-  [
-   "HyplexMC",
-   "Developer",
-   "hyplexmc.png",
-   "actual"
   ],
   [
    "MineHot",
@@ -178,6 +175,12 @@ window.SITE={
    "resign"
   ],
   [
+   "HyplexMC",
+   "Developer",
+   "hyplexmc.png",
+   "actual"
+  ],
+  [
    "Suncraft",
    "Mod",
    "suncraft.png",
@@ -188,6 +191,12 @@ window.SITE={
    "Helper",
    "chowbox.png",
    "resign"
+  ],
+  [
+   "SneakMC",
+   "Jr - Mod",
+   "sneakmc.png",
+   "actual"
   ],
   [
    "OrionMC",
@@ -211,7 +220,7 @@ window.SITE={
    "MineDark",
    "Developer",
    "minedark.png",
-   "actual"
+   "resign"
   ],
   [
    "MineDoll",
@@ -399,8 +408,48 @@ window.SITE={
    "Excelente trabajo, cumple sus propuestas y sus recomendaciones son muy buenas. Su trabajo como owner-founder es muy bueno, puede coordinar a los equipos de staff y hace una buena config."
   ]
  ],
- "works": [],
- "pages": [],
+ "works": [
+  [
+   "trabajos/nightpvp-mwwlg6mu0.webp",
+   "MineNight ━━━━ FullPvP",
+   ""
+  ],
+  [
+   "img/cashmclobby.png",
+   "CashMC ━━━━ Lobby",
+   ""
+  ],
+  [
+   "img/onebox.png",
+   "CrunchMC ━━━━ OnePieceBox",
+   ""
+  ],
+  [
+   "img/fnafboxstreakmc.png",
+   "StreakMC ━━━━ FnafBox",
+   ""
+  ],
+  [
+   "img/mariobox.png",
+   "NoatMC ━━━━ MarioBox",
+   ""
+  ],
+  [
+   "img/crunchlobby.png",
+   "CrunchMC ━━━━ Lobby",
+   ""
+  ],
+  [
+   "img/noatlobby.png",
+   "NoatMC ━━━━ Lobby",
+   ""
+  ],
+  [
+   "img/cashmcbajobox.png",
+   "CashMC ━━━━ BajoBox",
+   ""
+  ]
+ ],
  "contact": [
   [
    "Discord",
