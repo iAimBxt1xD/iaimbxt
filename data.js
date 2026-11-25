@@ -9,7 +9,7 @@ window.SITE={
  },
  "hero": {
   "sticker": "Open Commisions...",
-  "hi": "Conoce",
+  "hi": "Hola, Soy",
   "name": "iAimBxt_",
   "typed": [
    "Experto En Estética",
