@@ -25,8 +25,10 @@ function safeEq(a, b) {
 }
 
 function isAuthed(req) {
-  return verify((req.headers.authorization || "").replace(/^Bearer\s+/i, ""));
+  const cookie = String(req.headers.cookie || "").split(";").map(part => part.trim()).find(part => part.startsWith("iaimbxt_session="));
+  return verify(cookie ? cookie.slice("iaimbxt_session=".length) : "");
 }
+
 
 function envError() {
   const miss = ["ADMIN_PASSWORD"].filter(k => !process.env[k]);
@@ -75,7 +77,7 @@ async function putFile(path, buf, message, tries = 2) {
   return { unchanged: false };
 }
 
-// Solo se aceptan peticiones que vengan de este mismo sitio
+// Rechaza peticiones de otros sitios antes de aceptar cambios protegidos por sesión
 function sameOrigin(req) {
   const o = req.headers.origin;
   if (!o) return true; // peticiones sin Origin (no navegador) igual necesitan token/contraseña
