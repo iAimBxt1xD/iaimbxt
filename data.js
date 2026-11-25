@@ -98,6 +98,10 @@ window.SITE={
   [
    "AimPvP",
    "Plugin de PvP."
+  ],
+  [
+   "Proximamente...",
+   ""
   ]
  ],
  "servers": [
@@ -274,7 +278,7 @@ window.SITE={
   [
    "Modalidades",
    "Especialidad en modalidades competitivas y servidores de comunidad.",
-   "BoxPvP, Lobbies, Gens"
+   "BoxPvP, Lobbies, Gens, FullPvP, Survivals"
   ],
   [
    "Plugins y configs",
@@ -402,7 +406,7 @@ window.SITE={
    "Usuario",
    "iaimbxt",
    "Copiar usuario",
-   ""
+   "iaimbxr"
   ],
   [
    "NameMC",
