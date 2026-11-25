@@ -241,7 +241,7 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const S=p=>BL[p]||p;
 const BLOB_ASSET=/^\/api\/asset\?path=media\/[a-f0-9]{64}-[A-Za-z0-9_-][A-Za-z0-9._-]{0,80}\.(?:png|jpe?g|webp|gif)$/i;
-const imagePath=value=>{const path=String(value||"");if(BLOB_ASSET.test(path))return path;if(/^(?:img|trabajos)\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-][A-Za-z0-9._-]{0,80}\.(?:png|jpe?g|webp|gif)$/i.test(path)&&!path.split("/").includes(".."))return "/"+path;return ""};
+const imagePath=value=>{const path=String(value||"");if(BLOB_ASSET.test(path))return path;if(/^(?:img|trabajos)\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-][A-Za-z0-9._-]{0,80}\.(?:png|jpe?g|webp|gif)$/i.test(path)&&!path.split("/").includes(".."))return "/"+path;if(/^[A-Za-z0-9_-][A-Za-z0-9._-]{0,80}\.(?:png|jpe?g|webp|gif)$/i.test(path))return "/img/"+path;return ""};
 const workImages=w=>[w[0],...(Array.isArray(w[3])?w[3]:[])].filter(Boolean);
 const fig=(w,i,rv)=>`<figure class="${rv?"rv":""}" data-i="${i}"><img src="${esc(S(imagePath(w[0])))}" alt="${esc(w[1])}" loading="lazy" decoding="async"><figcaption>${esc(w[1])}</figcaption></figure>`;
 const url=u=>/^(https?:|mailto:|#)/.test(u)?esc(u):"#";
