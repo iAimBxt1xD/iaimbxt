@@ -411,7 +411,7 @@ window.SITE={
  "works": [
   [
    "trabajos/nightpvp-mwwlg6mu0.webp",
-   "MineNight ━━━━ FullPvP",
+   "MineNight ━━━━ FullPvP + Configuracion",
    ""
   ],
   [
@@ -421,7 +421,7 @@ window.SITE={
   ],
   [
    "img/fnafboxstreakmc.png",
-   "StreakMC ━━━━ FnafBox",
+   "StreakMC ━━━━ FnafBox + Configuracion",
    ""
   ],
   [
