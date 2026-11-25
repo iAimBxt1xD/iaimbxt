@@ -408,7 +408,48 @@ window.SITE={
    "Excelente trabajo, cumple sus propuestas y sus recomendaciones son muy buenas. Su trabajo como owner-founder es muy bueno, puede coordinar a los equipos de staff y hace una buena config."
   ]
  ],
- "works": [],
+ "works": [
+  [
+   "trabajos/nightpvp-mwwlg6mu0.webp",
+   "MineNight ━━━━ FullPvP",
+   ""
+  ],
+  [
+   "img/cashmclobby.png",
+   "CashMC ━━━━ Lobby",
+   ""
+  ],
+  [
+   "img/fnafboxstreakmc.png",
+   "StreakMC ━━━━ FnafBox",
+   ""
+  ],
+  [
+   "img/onebox.png",
+   "CrunchMC ━━━━ OnePieceBox",
+   ""
+  ],
+  [
+   "img/mariobox.png",
+   "NoatMC ━━━━ MarioBox",
+   ""
+  ],
+  [
+   "img/crunchlobby.png",
+   "CrunchMC ━━━━ Lobby",
+   ""
+  ],
+  [
+   "img/noatlobby.png",
+   "NoatMC ━━━━ Lobby",
+   ""
+  ],
+  [
+   "img/cashmcbajobox.png",
+   "CashMC ━━━━ BajoBox",
+   ""
+  ]
+ ],
  "contact": [
   [
    "Discord",
