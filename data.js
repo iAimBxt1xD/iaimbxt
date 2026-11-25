@@ -1,4 +1,4 @@
-const SITE={
+window.SITE={
  "title": "iAimBxt_ | Developer de servidores MineCraft",
  "brand": "iAimBxt_",
  "logo": "img/logo.png",
@@ -475,5 +475,3 @@ const SITE={
  ],
  "footer": "iAimBxt_ · 2026"
 };
-
-module.exports = SITE;
