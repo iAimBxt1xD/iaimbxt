@@ -456,7 +456,7 @@ window.SITE={
    "Usuario",
    "iaimbxt",
    "Copiar usuario",
-   "iaimbxr"
+   "iaimbxt"
   ],
   [
    "NameMC",
