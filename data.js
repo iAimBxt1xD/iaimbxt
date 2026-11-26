@@ -9,7 +9,7 @@ window.SITE={
  },
  "hero": {
   "sticker": "Open Commisions...",
-  "hi": "Hola, Soy",
+  "hi": "Conoce A",
   "name": "iAimBxt_",
   "typed": [
    "Experto En Estética",
@@ -18,13 +18,13 @@ window.SITE={
    "Liderazgo De Staff"
   ],
   "desc": "Experto en la configuración interna de servidores de Minecraft, con especialidad en la estética visual, los permisos y la máxima eficiencia. Hago plugins y le pongo orden al staff.",
-  "btn1": "Ver servers",
+  "btn1": "Trayectoria",
   "btn2": "Escríbeme",
   "photo": "img/logo.png"
  },
  "stats": [
   [
-   23,
+   24,
    "",
    "Servidores"
   ],
