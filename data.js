@@ -1,5 +1,5 @@
 window.SITE={
- "title": "iAimBxt_ | Developer de servidores Minecraft",
+ "title": "wtf.ayambits - portfolio",
  "brand": "iAimBxt_",
  "logo": "img/logo.png",
  "loader": {
@@ -48,7 +48,7 @@ window.SITE={
   "card": "#212121",
   "line": "#2e2e2e",
   "text": "#ffffff",
-  "muted": "#ffffff",
+  "muted": "#d6d6d6",
   "accent": "#ffd60a",
   "g1": "#ffe98a",
   "g2": "#ff9f1c"
